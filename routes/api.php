@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\ForumController;
+use App\Http\Controllers\JadwalSholatController;
 use App\Http\Controllers\SurahController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +14,7 @@ Route::get('/user', function (Request $request) {
 
 Route::get('surah', [SurahController::class, 'index']);
 
+Route::get('jadwal-sholat', [JadwalSholatController::class, 'index']);
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);

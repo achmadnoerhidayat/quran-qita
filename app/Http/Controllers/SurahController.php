@@ -22,7 +22,7 @@ class SurahController extends Controller
         }
         $surah = Surah::with('ayat');
         if ($search) {
-            $surah->where('nama', 'like', '%' . $search . '%');
+            $surah->where('nama_latin', 'like', '%' . $search . '%');
         }
         $surah = $surah->paginate($limit);
         return ResponseFormated::success($surah, 'data surah berhasil ditambahkan');
