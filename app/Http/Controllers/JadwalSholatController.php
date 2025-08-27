@@ -15,18 +15,25 @@ class JadwalSholatController extends Controller
         if (!$lat && !$long) {
             return ResponseFormated::error(null, 'Latitude & Longitude Harus Diisi', 403);
         }
-        $lokasi = Http::withHeaders([
-            'User-Agent' => 'QuranQitaLaravelApp/1.0 (quranqita@gmail.com)' // pakai email asli
-        ])->get('https://nominatim.openstreetmap.org/reverse', [
-            'format' => 'json',
-            'lat' => $lat,
-            'lon' => $long,
+        $lokasi = Http::get('https://maps.googleapis.com/maps/api/geocode/json', [
+            'latlng' => $lat . ',' . $long,
+            'key' => env('GOOGLE_MAPS_API_KEY'),
         ]);
         if ($lokasi->successful()) {
             $dataLokasi = $lokasi->json();
+            $results = $dataLokasi['results'];
+            $address = [];
+            if (!empty($results)) {
+                $addressComponents = $results[0]['address_components'];
+                foreach ($addressComponents as $component) {
+                    if (in_array('administrative_area_level_3', $component['types'])) {
+                        $address = $component;
+                    }
+                }
+            }
             $response = [];
             $jadwal = $this->_jadwalSholat($lat, $long);
-            $response['addrees'] = $dataLokasi['address'];
+            $response['addrees'] = $address;
             $response['jadwal_sholat'] = $jadwal;
             return ResponseFormated::success($response, 'jadwal sholat berhasil ditambahkan');
         }

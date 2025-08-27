@@ -19,6 +19,7 @@ Route::get('jadwal-sholat', [JadwalSholatController::class, 'index']);
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
+    Route::post('google', [AuthController::class, 'loginGoogle']);
 });
 
 Route::middleware('auth:sanctum')->prefix('bookmark')->group(function () {

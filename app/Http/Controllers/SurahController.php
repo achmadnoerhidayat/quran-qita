@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Surah;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ResponseFormated;
+use Illuminate\Support\Facades\Http;
 
 class SurahController extends Controller
 {
@@ -25,6 +26,13 @@ class SurahController extends Controller
             $surah->where('nama_latin', 'like', '%' . $search . '%');
         }
         $surah = $surah->paginate($limit);
+        foreach ($surah as $surat) {
+            $response = Http::get('https://equran.id/api/v2/tafsir/' . $surat->id);
+            if ($response->successful()) {
+                $tafsir = $response->json();
+                $surat->tafsir = $tafsir['data']['tafsir'];
+            }
+        }
         return ResponseFormated::success($surah, 'data surah berhasil ditambahkan');
     }
 }

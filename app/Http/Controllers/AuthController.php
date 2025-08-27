@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\Rules\Password;
@@ -81,6 +83,43 @@ class AuthController extends Controller
             'type' => "Bearer"
         ];
         return ResponseFormated::success($response, 'Login Successfully!');
+    }
+
+    public function loginGoogle(Request $request)
+    {
+        $data = $request->validate([
+            'token' => ['required', 'string']
+        ]);
+        $response = Http::get('https://oauth2.googleapis.com/tokeninfo', [
+            'id_token' => $data['token'],
+        ]);
+        // Periksa respons dari Google
+        if ($response->successful()) {
+            $userData = $response->json();
+            $email = $userData['email'];
+            $appUser = User::where('email', $email)->first();
+            if (!$appUser) {
+                $appUser = User::create([
+                    'name' => isset($userData['given_name']) ? $userData['given_name'] : $userData['name'],
+                    'password' => bcrypt(Str::random(7)),
+                    'email' => isset($email) ? $email : $userData['name'] . '@gmail.com',
+                ]);
+            }
+            $user = User::where('id', $appUser->id)->first();
+            $user->tokens()->delete();
+            $deviceName = 'API-' . md5($request->ip() . '|' . $request->header('User-Agent'));
+            // 7) buat token baru untuk client (plainTextToken hanya ditampilkan sekali)
+            $token = $user->createToken($deviceName)->plainTextToken;
+            $response = [
+                'user' => $user,
+                'token' => $token,
+                'type' => "Bearer"
+            ];
+
+            return ResponseFormated::success($response, 'Access Token google Berhasil Ditampilkan');
+        } else {
+            return response()->json(['error' => 'Invalid token'], 401);
+        }
     }
 
     protected function ensureIsNotRateLimited(Request $request)
