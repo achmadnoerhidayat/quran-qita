@@ -19,6 +19,11 @@ class SurahController extends Controller
             if (!$surah) {
                 return ResponseFormated::error(null, 'data surah tidak ditemukan', 404);
             }
+            $response = Http::get('https://equran.id/api/v2/tafsir/' . $surah->id);
+            if ($response->successful()) {
+                $tafsir = $response->json();
+                $surah->tafsir = $tafsir['data']['tafsir'];
+            }
             return ResponseFormated::success($surah, 'data surah berhasil ditambahkan');
         }
         $surah = Surah::with('ayat');
