@@ -22,20 +22,20 @@ class JadwalSholatController extends Controller
         if ($lokasi->successful()) {
             $dataLokasi = $lokasi->json();
             $results = $dataLokasi['results'];
-            $address = [];
             if (!empty($results)) {
+                $address = null;
                 $addressComponents = $results[0]['address_components'];
                 foreach ($addressComponents as $component) {
                     if (in_array('administrative_area_level_3', $component['types'])) {
                         $address = $component;
                     }
                 }
+                $response = [];
+                $jadwal = $this->_jadwalSholat($lat, $long);
+                $response['addrees'] = $address;
+                $response['jadwal_sholat'] = $jadwal;
+                return ResponseFormated::success($response, 'jadwal sholat berhasil ditambahkan');
             }
-            $response = [];
-            $jadwal = $this->_jadwalSholat($lat, $long);
-            $response['addrees'] = $address;
-            $response['jadwal_sholat'] = $jadwal;
-            return ResponseFormated::success($response, 'jadwal sholat berhasil ditambahkan');
         }
     }
 
