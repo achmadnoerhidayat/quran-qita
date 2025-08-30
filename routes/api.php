@@ -5,6 +5,7 @@ use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\DoaController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\JadwalSholatController;
+use App\Http\Controllers\MasjidController;
 use App\Http\Controllers\SurahController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -19,6 +20,10 @@ Route::get('surah', [SurahController::class, 'index']);
 Route::get('doa', [DoaController::class, 'index']);
 
 Route::get('jadwal-sholat', [JadwalSholatController::class, 'index']);
+
+Route::get('masjid', [MasjidController::class, 'index']);
+
+Route::get('berita-islami', [MasjidController::class, 'beritaIslami']);
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);

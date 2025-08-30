@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Ayat;
 use App\Models\Surah;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class SurahSeeder extends Seeder
@@ -15,7 +15,7 @@ class SurahSeeder extends Seeder
      */
     private function getSurah()
     {
-        $response = Http::get('https://equran.id/api/v2/surat');
+        $response = Http::timeout(60)->retry(3, 1000)->get('https://equran.id/api/v2/surat');
         if ($response->successful()) {
             $dataSurat = $response->json();
             foreach ($dataSurat['data'] as $sur) {
@@ -30,7 +30,7 @@ class SurahSeeder extends Seeder
                     'audio_full' => $sur['audioFull'],
                 ]);
                 echo 'Proses tambah data ' . $sur['nama'];
-                $response_ayah = Http::get('https://equran.id/api/v2/surat/' . $sur['nomor']);
+                $response_ayah = Http::timeout(60)->retry(3, 1000)->get('https://equran.id/api/v2/surat/' . $sur['nomor']);
                 if ($response_ayah->successful()) {
                     $data_ayah = $response_ayah->json()['data'];
                     foreach ($data_ayah['ayat'] as $ayat) {
@@ -40,6 +40,7 @@ class SurahSeeder extends Seeder
                             'teks_arab' => $ayat['teksArab'],
                             'teks_latin' => $ayat['teksLatin'],
                             'teks_indo' => $ayat['teksIndonesia'],
+                            'audio' => $ayat['audio'],
                         ]);
                         echo 'Proses tambah data ayat ' . $ayat['nomorAyat'];
                     }
@@ -48,8 +49,15 @@ class SurahSeeder extends Seeder
         }
     }
 
+    private function reset()
+    {
+        DB::table('surahs')->truncate();
+        DB::table('ayats')->truncate();
+    }
+
     public function run(): void
     {
+        $this->reset();
         echo 'Proses Seeding Mulai';
         $this->getSurah();
         echo 'Proses Seeding Selesai';

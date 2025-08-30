@@ -15,9 +15,10 @@ class JadwalSholatController extends Controller
         if (!$lat && !$long) {
             return ResponseFormated::error(null, 'Latitude & Longitude Harus Diisi', 403);
         }
+        $key = config('services.google.key');
         $lokasi = Http::get('https://maps.googleapis.com/maps/api/geocode/json', [
             'latlng' => $lat . ',' . $long,
-            'key' => env('GOOGLE_MAPS_API_KEY'),
+            'key' => $key,
         ]);
         if ($lokasi->successful()) {
             $dataLokasi = $lokasi->json();

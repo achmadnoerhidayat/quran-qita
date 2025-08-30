@@ -12,9 +12,14 @@ class Ayat extends Model
         'teks_arab',
         'teks_latin',
         'teks_indo',
+        'audio',
     ];
 
     protected $hidden = ['surah_id'];
+
+    protected $casts = [
+        'audio' => 'array',
+    ];
 
     public function surat()
     {
