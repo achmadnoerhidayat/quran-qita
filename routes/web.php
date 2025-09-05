@@ -10,6 +10,10 @@ Route::get('/terms', function () {
     return view('terms');
 });
 
+Route::get('/terms-user', function () {
+    return view('termsuser');
+});
+
 Route::get('/privacy', function () {
     return view('privacy');
 });
