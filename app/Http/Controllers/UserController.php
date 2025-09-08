@@ -31,7 +31,7 @@ class UserController extends Controller
             return ResponseFormated::success($users, 'data user berhasil ditambahkan');
         }
 
-        $users = User::select('name', 'email', 'role');
+        $users = User::select('id', 'name', 'email', 'role');
         if ($name) {
             $users = $users->where('name', 'like', '%' . $name . '%');
         }
