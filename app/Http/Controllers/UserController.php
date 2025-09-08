@@ -14,6 +14,7 @@ class UserController extends Controller
     {
         $id = $request->input('id');
         $name = $request->input('name');
+        $limit = $request->input('limit', 25);
         $user = $request->user();
         if (!in_array($user->role, ['admin', 'super-admin'])) {
             $users = User::where('id', $user->id)->first();
@@ -34,7 +35,7 @@ class UserController extends Controller
         if ($name) {
             $users = $users->where('name', 'like', '%' . $name . '%');
         }
-        return ResponseFormated::success($users, 'data user berhasil ditampilkan');
+        return ResponseFormated::success($users->paginate($limit), 'data user berhasil ditampilkan');
     }
 
     public function store(Request $request)
