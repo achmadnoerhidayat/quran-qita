@@ -13,6 +13,7 @@ class Surah extends Model
         'jumlah_ayat',
         'tempat_turun',
         'arti',
+        'arti_english',
         'deskripsi',
         'audio_full',
     ];

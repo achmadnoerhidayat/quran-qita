@@ -3,9 +3,11 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\DoaController;
+use App\Http\Controllers\DonasiController;
 use App\Http\Controllers\ForumController;
 use App\Http\Controllers\JadwalSholatController;
 use App\Http\Controllers\MasjidController;
+use App\Http\Controllers\RekeningBankController;
 use App\Http\Controllers\SurahController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -50,4 +52,18 @@ Route::middleware('auth:sanctum')->prefix('forum-post')->group(function () {
     Route::post('/', [ForumController::class, 'store']);
     Route::put('/{id}', [ForumController::class, 'update']);
     Route::delete('/{id}', [ForumController::class, 'delete']);
+});
+
+Route::prefix('rekening-bank')->group(function () {
+    Route::get('/', [RekeningBankController::class, 'index']);
+    Route::post('/', [RekeningBankController::class, 'store'])->middleware('auth:sanctum');
+    Route::put('/{id}', [RekeningBankController::class, 'update'])->middleware('auth:sanctum');
+    Route::delete('/{id}', [RekeningBankController::class, 'delete'])->middleware('auth:sanctum');
+});
+
+Route::middleware('auth:sanctum')->prefix('donasi')->group(function () {
+    Route::get('/', [DonasiController::class, 'index']);
+    Route::post('/', [DonasiController::class, 'store']);
+    Route::put('/{id}', [DonasiController::class, 'update']);
+    Route::delete('/{id}', [DonasiController::class, 'delete']);
 });

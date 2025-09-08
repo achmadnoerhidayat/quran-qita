@@ -12,6 +12,7 @@ class Ayat extends Model
         'teks_arab',
         'teks_latin',
         'teks_indo',
+        'teks_english',
         'audio',
     ];
 
