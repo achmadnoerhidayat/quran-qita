@@ -1,6 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api;
+
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\ResponseFormated;
 
 use App\Models\User;
 use Illuminate\Http\Request;

@@ -1,21 +1,19 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\BookmarkController;
-use App\Http\Controllers\DoaController;
-use App\Http\Controllers\DonasiController;
-use App\Http\Controllers\ForumController;
-use App\Http\Controllers\JadwalSholatController;
-use App\Http\Controllers\MasjidController;
-use App\Http\Controllers\RekeningBankController;
-use App\Http\Controllers\SurahController;
-use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\api\AiController;
+use App\Http\Controllers\api\AuthController;
+use App\Http\Controllers\api\BookmarkController;
+use App\Http\Controllers\api\DoaController;
+use App\Http\Controllers\api\DonasiController;
+use App\Http\Controllers\api\ForumController;
+use App\Http\Controllers\api\HighlightController;
+use App\Http\Controllers\api\JadwalSholatController;
+use App\Http\Controllers\api\MasjidController;
+use App\Http\Controllers\api\NoteController;
+use App\Http\Controllers\api\RekeningBankController;
+use App\Http\Controllers\api\SurahController;
+use App\Http\Controllers\api\UserController;
 use Illuminate\Support\Facades\Route;
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
 
 Route::get('surah', [SurahController::class, 'index']);
 
@@ -66,4 +64,22 @@ Route::middleware('auth:sanctum')->prefix('donasi')->group(function () {
     Route::post('/', [DonasiController::class, 'store']);
     Route::put('/{id}', [DonasiController::class, 'update']);
     Route::delete('/{id}', [DonasiController::class, 'delete']);
+});
+
+Route::middleware('auth:sanctum')->prefix('note')->group(function () {
+    Route::get('/', [NoteController::class, 'index']);
+    Route::post('/', [NoteController::class, 'store']);
+    Route::put('/{id}', [NoteController::class, 'update']);
+    Route::delete('/{id}', [NoteController::class, 'delete']);
+});
+
+Route::middleware('auth:sanctum')->prefix('highlight')->group(function () {
+    Route::get('/', [HighlightController::class, 'index']);
+    Route::post('/', [HighlightController::class, 'store']);
+    Route::put('/{id}', [HighlightController::class, 'update']);
+    Route::delete('/{id}', [HighlightController::class, 'delete']);
+});
+
+Route::middleware('auth:sanctum')->prefix('chat-ai')->group(function () {
+    Route::post('/', [AiController::class, 'chat']);
 });

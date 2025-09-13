@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\api;
+
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\ResponseFormated;
 
 use App\Models\Surah;
 use Illuminate\Http\Request;
-use App\Http\Controllers\ResponseFormated;
 use Illuminate\Support\Facades\Http;
 
 class SurahController extends Controller
