@@ -30,7 +30,7 @@ class HighlightController extends Controller
     {
         $data = $request->validate([
             'surah_id' => ['required', 'numeric'],
-            'ayat_id' => ['required', 'numeric']
+            'ayat_id' => ['nullable', 'numeric']
         ]);
         try {
             DB::beginTransaction();
@@ -48,7 +48,7 @@ class HighlightController extends Controller
     {
         $data = $request->validate([
             'surah_id' => ['required', 'numeric'],
-            'ayat_id' => ['required', 'numeric']
+            'ayat_id' => ['nullable', 'numeric']
         ]);
         try {
             DB::beginTransaction();
@@ -75,6 +75,19 @@ class HighlightController extends Controller
                 return ResponseFormated::error(null, 'data highlight tidak ditemukan', 404);
             }
             $highlight->delete();
+            DB::commit();
+            return ResponseFormated::success($highlight, 'data highlight berhasil dihapus');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return ResponseFormated::error(null, $e->getMessage(), 403);
+        }
+    }
+
+    public function deleteAll(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $highlight = Highlight::where('user_id', $request->user()->id)->delete();
             DB::commit();
             return ResponseFormated::success($highlight, 'data highlight berhasil dihapus');
         } catch (\Exception $e) {

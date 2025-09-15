@@ -4,20 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Forum extends Model
+class Comment extends Model
 {
-    protected $fillable = ['user_id', 'title', 'content'];
+    protected $fillable = ['user_id', 'forum_id', 'body'];
 
-    protected $hidden = ['user_id'];
+    protected $hidden = ['user_id', 'forum_id'];
 
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function comments()
+    public function forum()
     {
-        return $this->hasMany(Comment::class);
+        return $this->belongsTo(Forum::class, 'forum_id');
     }
 
     public function likes()

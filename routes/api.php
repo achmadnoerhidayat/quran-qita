@@ -3,6 +3,7 @@
 use App\Http\Controllers\api\AiController;
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\BookmarkController;
+use App\Http\Controllers\api\CommentController;
 use App\Http\Controllers\api\DoaController;
 use App\Http\Controllers\api\DonasiController;
 use App\Http\Controllers\api\ForumController;
@@ -48,8 +49,17 @@ Route::middleware('auth:sanctum')->prefix('bookmark')->group(function () {
 Route::middleware('auth:sanctum')->prefix('forum-post')->group(function () {
     Route::get('/', [ForumController::class, 'index']);
     Route::post('/', [ForumController::class, 'store']);
+    Route::post('/like', [ForumController::class, 'like']);
     Route::put('/{id}', [ForumController::class, 'update']);
     Route::delete('/{id}', [ForumController::class, 'delete']);
+});
+
+Route::middleware('auth:sanctum')->prefix('comment')->group(function () {
+    // Route::get('/', [ForumController::class, 'index']);
+    Route::post('/', [CommentController::class, 'store']);
+    Route::post('/like', [CommentController::class, 'like']);
+    Route::put('/{id}', [CommentController::class, 'update']);
+    Route::delete('/{id}', [CommentController::class, 'delete']);
 });
 
 Route::prefix('rekening-bank')->group(function () {
@@ -78,6 +88,7 @@ Route::middleware('auth:sanctum')->prefix('highlight')->group(function () {
     Route::post('/', [HighlightController::class, 'store']);
     Route::put('/{id}', [HighlightController::class, 'update']);
     Route::delete('/{id}', [HighlightController::class, 'delete']);
+    Route::post('/delete-all', [HighlightController::class, 'deleteAll']);
 });
 
 Route::middleware('auth:sanctum')->prefix('chat-ai')->group(function () {

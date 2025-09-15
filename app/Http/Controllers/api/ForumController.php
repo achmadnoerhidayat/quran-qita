@@ -16,13 +16,13 @@ class ForumController extends Controller
         $title = $request->input('title');
         $limit = $request->input('limit', 25);
         if ($id) {
-            $forum = Forum::with('user')->where('id', $id)->where('user_id', $request->user()->id)->first();
+            $forum = Forum::with('user', 'likes.user', 'comments.user', 'comments.likes.user')->where('id', $id)->where('user_id', $request->user()->id)->first();
             if (!$forum) {
                 return ResponseFormated::error(null, 'data forum post tidak ditemukan', 404);
             }
             return ResponseFormated::success($forum, 'data forum post berhasil ditambahkan');
         }
-        $forum = Forum::with('user');
+        $forum = Forum::with('user', 'likes.user', 'comments.user', 'comments.likes.user');
         if ($title) {
             $forum->where('title', 'like', '%' . $title . '%');
         }
@@ -94,6 +94,35 @@ class ForumController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return ResponseFormated::error(null, $e->getMessage(), 403);
+        }
+    }
+
+    public function like(Request $request)
+    {
+        $data = $request->validate([
+            'forum_id' => ['required', 'numeric']
+        ]);
+        $user = $request->user();
+        try {
+            $forum = Forum::where('id', $data['forum_id'])->first();
+            if (!$forum) {
+                return ResponseFormated::error(null, 'data forum tidak ditemukan', 404);
+            }
+            if ($forum->user_id === $user->id) {
+                return ResponseFormated::error(null, 'Anda tidak bisa menyukai forum yang Anda buat sendiri.', 403);
+            }
+            $existingLike = $forum->likes()->where('user_id', $user->id)->first();
+            if ($existingLike) {
+                // Jika sudah ada like, hapus (unlike)
+                $existingLike->delete();
+                return ResponseFormated::success(null, 'Unlike berhasil!');
+            } else {
+                // Jika belum, buat like baru
+                $forum->likes()->create(['user_id' => $user->id]);
+                return ResponseFormated::success(null, 'Like berhasil!');
+            }
+        } catch (\Exception $e) {
+            //throw $th;
         }
     }
 }
