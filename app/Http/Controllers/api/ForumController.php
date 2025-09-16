@@ -16,7 +16,7 @@ class ForumController extends Controller
         $title = $request->input('title');
         $limit = $request->input('limit', 25);
         if ($id) {
-            $forum = Forum::with('user', 'likes.user', 'comments.user', 'comments.likes.user')->where('id', $id)->where('user_id', $request->user()->id)->first();
+            $forum = Forum::with('user', 'likes.user', 'comments.user', 'comments.likes.user')->where('id', $id)->first();
             if (!$forum) {
                 return ResponseFormated::error(null, 'data forum post tidak ditemukan', 404);
             }
@@ -26,7 +26,7 @@ class ForumController extends Controller
         if ($title) {
             $forum->where('title', 'like', '%' . $title . '%');
         }
-        $forum = $forum->where('user_id', $request->user()->id)->paginate($limit);
+        $forum = $forum->paginate($limit);
         return ResponseFormated::success($forum, 'data forum post berhasil ditambahkan');
     }
 
@@ -44,7 +44,7 @@ class ForumController extends Controller
                 'title' => $data['title'],
                 'content' => $data['content'],
             ]);
-            $resp = Forum::with('user')->where('id', $forum->id)->first();
+            $resp = Forum::with('user', 'likes.user', 'comments.user', 'comments.likes.user')->where('id', $forum->id)->first();
             DB::commit();
             return ResponseFormated::success($resp, 'data forum post berhasil ditambahkan');
         } catch (\Exception $e) {
@@ -71,7 +71,7 @@ class ForumController extends Controller
                 'title' => $data['title'],
                 'content' => $data['content'],
             ]);
-            $resp = Forum::with('user')->where('id', $forum->id)->first();
+            $resp = Forum::with('user', 'likes.user', 'comments.user', 'comments.likes.user')->where('id', $forum->id)->first();
             DB::commit();
             return ResponseFormated::success($resp, 'data forum post berhasil diupdate');
         } catch (\Exception $e) {
