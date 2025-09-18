@@ -11,7 +11,9 @@ use App\Http\Controllers\api\HighlightController;
 use App\Http\Controllers\api\JadwalSholatController;
 use App\Http\Controllers\api\MasjidController;
 use App\Http\Controllers\api\NoteController;
+use App\Http\Controllers\api\PlanController;
 use App\Http\Controllers\api\RekeningBankController;
+use App\Http\Controllers\api\SubscriptionController;
 use App\Http\Controllers\api\SurahController;
 use App\Http\Controllers\api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -89,6 +91,20 @@ Route::middleware('auth:sanctum')->prefix('highlight')->group(function () {
     Route::put('/{id}', [HighlightController::class, 'update']);
     Route::delete('/{id}', [HighlightController::class, 'delete']);
     Route::post('/delete-all', [HighlightController::class, 'deleteAll']);
+});
+
+Route::middleware('auth:sanctum')->prefix('plan')->group(function () {
+    Route::get('/', [PlanController::class, 'index']);
+    Route::post('/', [PlanController::class, 'store']);
+    Route::put('/{id}', [PlanController::class, 'update']);
+    Route::delete('/{id}', [PlanController::class, 'delete']);
+});
+
+Route::middleware('auth:sanctum')->prefix('subscription')->group(function () {
+    Route::get('/', [SubscriptionController::class, 'index']);
+    Route::post('/', [SubscriptionController::class, 'store']);
+    Route::put('/{id}', [SubscriptionController::class, 'update']);
+    Route::delete('/{id}', [SubscriptionController::class, 'delete']);
 });
 
 Route::middleware('auth:sanctum')->prefix('chat-ai')->group(function () {

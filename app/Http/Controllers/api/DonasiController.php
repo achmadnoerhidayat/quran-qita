@@ -110,6 +110,7 @@ class DonasiController extends Controller
             }
             $url = $donasi->bukti_transfer;
             if ($request->hasFile('bukti_transfer')) {
+                Storage::disk('public')->delete($url);
                 $photo = $request->file('bukti_transfer');
                 $url = $photo->store('asset/donasi', 'public');
             }
