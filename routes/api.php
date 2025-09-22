@@ -13,6 +13,8 @@ use App\Http\Controllers\api\MasjidController;
 use App\Http\Controllers\api\NoteController;
 use App\Http\Controllers\api\PlanController;
 use App\Http\Controllers\api\RekeningBankController;
+use App\Http\Controllers\api\ReminderController;
+use App\Http\Controllers\api\ScheduleController;
 use App\Http\Controllers\api\SubscriptionController;
 use App\Http\Controllers\api\SurahController;
 use App\Http\Controllers\api\UserController;
@@ -103,8 +105,23 @@ Route::middleware('auth:sanctum')->prefix('plan')->group(function () {
 Route::middleware('auth:sanctum')->prefix('subscription')->group(function () {
     Route::get('/', [SubscriptionController::class, 'index']);
     Route::post('/', [SubscriptionController::class, 'store']);
+    Route::post('/renew', [SubscriptionController::class, 'renew']);
     Route::put('/{id}', [SubscriptionController::class, 'update']);
     Route::delete('/{id}', [SubscriptionController::class, 'delete']);
+});
+
+Route::middleware('auth:sanctum')->prefix('reminder')->group(function () {
+    Route::get('/', [ReminderController::class, 'index']);
+    Route::post('/', [ReminderController::class, 'store']);
+    Route::put('/{id}', [ReminderController::class, 'update']);
+    Route::delete('/{id}', [ReminderController::class, 'delete']);
+});
+
+Route::middleware('auth:sanctum')->prefix('schedule')->group(function () {
+    Route::get('/', [ScheduleController::class, 'index']);
+    Route::post('/', [ScheduleController::class, 'store']);
+    Route::put('/{id}', [ScheduleController::class, 'update']);
+    Route::delete('/{id}', [ScheduleController::class, 'delete']);
 });
 
 Route::middleware('auth:sanctum')->prefix('chat-ai')->group(function () {

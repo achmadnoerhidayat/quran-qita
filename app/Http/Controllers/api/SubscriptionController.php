@@ -134,11 +134,9 @@ class SubscriptionController extends Controller
                 $photo = $request->file('bukti_transfer');
                 $url = $photo->store('asset/subscription', 'public');
             }
-            if ($data['payment_status'] === 'paid') {
+            if ($data['payment_status'] === 'paid' && $subs->status === 'pending' && in_array($user->role, ['admin', 'super-admin'])) {
                 $aksi = "Dikonfirmasi";
-                $start = Carbon::now();
-                $end = Carbon::now()->addDays($subs->plan->duration);
-                $data['starts_at'] = $start;
+                $end = $subs->end_at->isPast() ? Carbon::now()->addDays($subs->plan->duration) : $subs->end_at->addDays($subs->plan->duration);
                 $data['end_at'] = $end;
                 $data['status'] = "active";
             }
@@ -152,6 +150,45 @@ class SubscriptionController extends Controller
             DB::commit();
             return ResponseFormated::success($subs, 'data subscription berhasil diupdate');
         } catch (\Exception $e) {
+            DB::rollBack();
+            return ResponseFormated::error(null, $e->getMessage(), 403);
+        }
+    }
+
+    public function renew(Request $request)
+    {
+        $data = $request->validate([
+            "plan_id" => ['required', 'numeric'],
+            "bukti_transfer" => ['required', 'image', 'mimes:png,jpg,jpeg'],
+        ]);
+
+        $user = $request->user();
+        $url = null;
+        try {
+            DB::beginTransaction();
+            $sub = Subscription::where('user_id', $user->id)->first();
+            if (!$sub) {
+                return ResponseFormated::error(null, 'data Subscription tidak ditemukan', 404);
+            }
+            $url = $sub->bukti_transfer;
+            if ($request->hasFile('bukti_transfer')) {
+                Storage::disk('public')->delete($url);
+                $photo = $request->file('bukti_transfer');
+                $url = $photo->store('asset/subscription', 'public');
+            }
+            $data['user_id'] = $user->id;
+            $data['payment_status'] = 'pending';
+            $data['status'] = 'pending';
+            $data['bukti_transfer'] = $url;
+            if ($sub) {
+                $sub->update($data);
+            }
+            DB::commit();
+            return ResponseFormated::success(null, 'data subscription berhasil diupgrade');
+        } catch (\Exception $e) {
+            if ($url !== null) {
+                Storage::disk('public')->delete($url);
+            }
             DB::rollBack();
             return ResponseFormated::error(null, $e->getMessage(), 403);
         }

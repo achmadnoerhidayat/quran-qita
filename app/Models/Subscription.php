@@ -10,6 +10,11 @@ class Subscription extends Model
 
     protected $hidden = ['user_id', 'plan_id'];
 
+    protected $casts = [
+        "starts_at" => "datetime",
+        "end_at" => "datetime",
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

@@ -50,6 +50,11 @@ class User extends Authenticatable
         ];
     }
 
+    public function subscription()
+    {
+        return $this->hasMany(Subscription::class, 'user_id');
+    }
+
     public function bookmark()
     {
         return $this->hasMany(Bookmark::class, 'user_id');
