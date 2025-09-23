@@ -135,8 +135,14 @@ class SubscriptionController extends Controller
                 $url = $photo->store('asset/subscription', 'public');
             }
             if ($data['payment_status'] === 'paid' && $subs->status === 'pending' && in_array($user->role, ['admin', 'super-admin'])) {
+                $end = null;
+                if ($subs->end_at !== null) {
+                    $end = $subs->end_at->isPast() ? Carbon::now()->addDays($subs->plan->duration) : $subs->end_at->addDays($subs->plan->duration);
+                } else {
+                    $end = Carbon::now()->addDays($subs->plan->duration);
+                    $data['starts_at'] = Carbon::now();
+                }
                 $aksi = "Dikonfirmasi";
-                $end = $subs->end_at->isPast() ? Carbon::now()->addDays($subs->plan->duration) : $subs->end_at->addDays($subs->plan->duration);
                 $data['end_at'] = $end;
                 $data['status'] = "active";
             }

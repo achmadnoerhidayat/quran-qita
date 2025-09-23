@@ -53,7 +53,9 @@ class JadwalSholatController extends Controller
         ]);
         if ($jadwal->successful()) {
             $dataSholat = $jadwal->json();
-            return $dataSholat['data']['timings'];
+            $resp = $dataSholat['data']['timings'];
+            $resp['hijri'] = $dataSholat['data']['date']['hijri'];
+            return $resp;
         }
     }
 }
