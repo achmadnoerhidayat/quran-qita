@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Forum extends Model
 {
-    protected $fillable = ['user_id', 'title', 'content'];
+    protected $fillable = ['user_id', 'comunity_id', 'title', 'content', 'image', 'status'];
 
-    protected $hidden = ['user_id'];
+    protected $hidden = ['user_id', 'comunity_id'];
 
     public function user()
     {

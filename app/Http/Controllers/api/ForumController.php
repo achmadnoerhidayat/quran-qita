@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ResponseFormated;
+use App\Models\Comunity;
 use App\Models\Forum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -33,13 +34,24 @@ class ForumController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
+            'comunity_id' => ['nullable', 'numeric'],
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string', 'max:1000'],
         ]);
 
         try {
             DB::beginTransaction();
+            if (isset($data['comunity_id'])) {
+                $user = $request->user();
+                $comunity = Comunity::whereHas('member', function ($q) use ($user) {
+                    $q->where('user_id', $user->id);
+                })->where('id', $data['comunity_id'])->first();
+                if (!$comunity) {
+                    return ResponseFormated::error(null, 'data komunitas tidak ditemukan', 404);
+                }
+            }
             $forum = Forum::create([
+                'comunity_id' => isset($data['comunity_id']) ? $data['comunity_id'] : null,
                 'user_id' => $request->user()->id,
                 'title' => $data['title'],
                 'content' => $data['content'],
@@ -56,6 +68,7 @@ class ForumController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->validate([
+            'comunity_id' => ['nullable', 'numeric'],
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string', 'max:1000'],
         ]);
@@ -67,7 +80,17 @@ class ForumController extends Controller
             if (!$forum) {
                 return ResponseFormated::error(null, 'data forum post tidak ditemukan', 404);
             }
+            if (isset($data['comunity_id'])) {
+                $user = $request->user();
+                $comunity = Comunity::whereHas('member', function ($q) use ($user) {
+                    $q->where('user_id', $user->id);
+                })->where('id', $data['comunity_id'])->first();
+                if (!$comunity) {
+                    return ResponseFormated::error(null, 'data komunitas tidak ditemukan', 404);
+                }
+            }
             $forum->update([
+                'comunity_id' => isset($data['comunity_id']) ? $data['comunity_id'] : null,
                 'title' => $data['title'],
                 'content' => $data['content'],
             ]);

@@ -4,11 +4,13 @@ use App\Http\Controllers\api\AiController;
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\BookmarkController;
 use App\Http\Controllers\api\CommentController;
+use App\Http\Controllers\api\ComunityController;
 use App\Http\Controllers\api\DoaController;
 use App\Http\Controllers\api\DonasiController;
 use App\Http\Controllers\api\ForumController;
 use App\Http\Controllers\api\HighlightController;
 use App\Http\Controllers\api\JadwalSholatController;
+use App\Http\Controllers\api\JournalController;
 use App\Http\Controllers\api\MasjidController;
 use App\Http\Controllers\api\NoteController;
 use App\Http\Controllers\api\PlanController;
@@ -48,6 +50,14 @@ Route::middleware('auth:sanctum')->prefix('bookmark')->group(function () {
     Route::post('/', [BookmarkController::class, 'store']);
     Route::put('/{id}', [BookmarkController::class, 'update']);
     Route::delete('/{id}', [BookmarkController::class, 'delete']);
+});
+
+Route::middleware('auth:sanctum')->prefix('comunity')->group(function () {
+    Route::get('/', [ComunityController::class, 'index']);
+    Route::post('/', [ComunityController::class, 'store']);
+    Route::put('/{id}', [ComunityController::class, 'update']);
+    Route::post('/join/{id}', [ComunityController::class, 'join']);
+    Route::post('/leave/{id}', [ComunityController::class, 'leave']);
 });
 
 Route::middleware('auth:sanctum')->prefix('forum-post')->group(function () {
@@ -122,6 +132,13 @@ Route::middleware('auth:sanctum')->prefix('schedule')->group(function () {
     Route::post('/', [ScheduleController::class, 'store']);
     Route::put('/{id}', [ScheduleController::class, 'update']);
     Route::delete('/{id}', [ScheduleController::class, 'delete']);
+});
+
+Route::middleware('auth:sanctum')->prefix('journal')->group(function () {
+    Route::get('/', [JournalController::class, 'index']);
+    Route::post('/', [JournalController::class, 'store']);
+    Route::put('/{id}', [JournalController::class, 'update']);
+    Route::delete('/{id}', [JournalController::class, 'delete']);
 });
 
 Route::middleware('auth:sanctum')->prefix('chat-ai')->group(function () {
