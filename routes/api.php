@@ -24,6 +24,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('surah', [SurahController::class, 'index']);
 
+Route::get('tafsir', [SurahController::class, 'tafsir']);
+
 Route::get('doa', [DoaController::class, 'index']);
 
 Route::get('jadwal-sholat', [JadwalSholatController::class, 'index']);
