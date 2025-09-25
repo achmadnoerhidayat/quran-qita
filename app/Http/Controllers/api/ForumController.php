@@ -8,6 +8,7 @@ use App\Models\Comunity;
 use App\Models\Forum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ForumController extends Controller
 {
@@ -15,17 +16,21 @@ class ForumController extends Controller
     {
         $id = $request->input('id');
         $title = $request->input('title');
+        $comunity_id = $request->input('comunity_id');
         $limit = $request->input('limit', 25);
         if ($id) {
-            $forum = Forum::with('user', 'likes.user', 'comments.user', 'comments.likes.user')->where('id', $id)->first();
+            $forum = Forum::with('comunity', 'user', 'likes.user', 'comments.user', 'comments.likes.user')->where('id', $id)->first();
             if (!$forum) {
                 return ResponseFormated::error(null, 'data forum post tidak ditemukan', 404);
             }
             return ResponseFormated::success($forum, 'data forum post berhasil ditambahkan');
         }
-        $forum = Forum::with('user', 'likes.user', 'comments.user', 'comments.likes.user');
+        $forum = Forum::with('comunity', 'user', 'likes.user', 'comments.user', 'comments.likes.user');
         if ($title) {
             $forum->where('title', 'like', '%' . $title . '%');
+        }
+        if ($comunity_id) {
+            $forum->where('comunity_id', $comunity_id);
         }
         $forum = $forum->paginate($limit);
         return ResponseFormated::success($forum, 'data forum post berhasil ditambahkan');
@@ -37,8 +42,9 @@ class ForumController extends Controller
             'comunity_id' => ['nullable', 'numeric'],
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string', 'max:1000'],
+            'image' => ['nullable', 'image', 'mimes:png,jpg,jpeg']
         ]);
-
+        $url = null;
         try {
             DB::beginTransaction();
             if (isset($data['comunity_id'])) {
@@ -50,17 +56,23 @@ class ForumController extends Controller
                     return ResponseFormated::error(null, 'data komunitas tidak ditemukan', 404);
                 }
             }
+            if ($request->hasFile('image')) {
+                $photo = $request->file('image');
+                $url = $photo->store('asset/forum', 'public');
+            }
             $forum = Forum::create([
                 'comunity_id' => isset($data['comunity_id']) ? $data['comunity_id'] : null,
                 'user_id' => $request->user()->id,
                 'title' => $data['title'],
                 'content' => $data['content'],
+                'image' => $url,
             ]);
             $resp = Forum::with('user', 'likes.user', 'comments.user', 'comments.likes.user')->where('id', $forum->id)->first();
             DB::commit();
             return ResponseFormated::success($resp, 'data forum post berhasil ditambahkan');
         } catch (\Exception $e) {
             DB::rollBack();
+            Storage::disk('public')->delete($url);
             return ResponseFormated::error(null, $e->getMessage(), 403);
         }
     }
@@ -71,15 +83,16 @@ class ForumController extends Controller
             'comunity_id' => ['nullable', 'numeric'],
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string', 'max:1000'],
+            'image' => ['nullable', 'image', 'mimes:png,jpg,jpeg']
         ]);
-
+        $url = null;
         try {
             DB::beginTransaction();
-
             $forum = Forum::where('user_id', $request->user()->id)->where('id', $id)->first();
             if (!$forum) {
                 return ResponseFormated::error(null, 'data forum post tidak ditemukan', 404);
             }
+            $url = $forum->image;
             if (isset($data['comunity_id'])) {
                 $user = $request->user();
                 $comunity = Comunity::whereHas('member', function ($q) use ($user) {
@@ -89,10 +102,18 @@ class ForumController extends Controller
                     return ResponseFormated::error(null, 'data komunitas tidak ditemukan', 404);
                 }
             }
+            if ($request->hasFile('image')) {
+                if (!empty($url)) {
+                    Storage::disk('public')->delete($url);
+                }
+                $photo = $request->file('image');
+                $url = $photo->store('asset/forum', 'public');
+            }
             $forum->update([
                 'comunity_id' => isset($data['comunity_id']) ? $data['comunity_id'] : null,
                 'title' => $data['title'],
                 'content' => $data['content'],
+                'image' => $url,
             ]);
             $resp = Forum::with('user', 'likes.user', 'comments.user', 'comments.likes.user')->where('id', $forum->id)->first();
             DB::commit();

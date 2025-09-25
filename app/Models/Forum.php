@@ -10,6 +10,11 @@ class Forum extends Model
 
     protected $hidden = ['user_id', 'comunity_id'];
 
+    public function comunity()
+    {
+        return $this->belongsTo(Comunity::class, 'comunity_id');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
