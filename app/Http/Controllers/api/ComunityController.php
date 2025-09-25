@@ -20,7 +20,7 @@ class ComunityController extends Controller
 
         $comunity = Comunity::with(['post' => function ($q) {
             $q->orderBy('created_at', 'desc');
-        }, 'member.user']);
+        }, 'post.user', 'post.likes.user', 'post.comments.user', 'post.comments.likes.user', 'member.user']);
         if ($id) {
             $comunity = $comunity->where('id', $id)->first();
             if (!$comunity) {
