@@ -5,15 +5,18 @@ use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\BookmarkController;
 use App\Http\Controllers\api\CommentController;
 use App\Http\Controllers\api\ComunityController;
+use App\Http\Controllers\api\CourseController;
 use App\Http\Controllers\api\DoaController;
 use App\Http\Controllers\api\DonasiController;
 use App\Http\Controllers\api\ForumController;
 use App\Http\Controllers\api\HighlightController;
 use App\Http\Controllers\api\JadwalSholatController;
 use App\Http\Controllers\api\JournalController;
+use App\Http\Controllers\api\LessonController;
 use App\Http\Controllers\api\MasjidController;
 use App\Http\Controllers\api\NoteController;
 use App\Http\Controllers\api\PlanController;
+use App\Http\Controllers\api\QuizzeController;
 use App\Http\Controllers\api\RekeningBankController;
 use App\Http\Controllers\api\ReminderController;
 use App\Http\Controllers\api\ScheduleController;
@@ -141,6 +144,27 @@ Route::middleware('auth:sanctum')->prefix('journal')->group(function () {
     Route::post('/', [JournalController::class, 'store']);
     Route::put('/{id}', [JournalController::class, 'update']);
     Route::delete('/{id}', [JournalController::class, 'delete']);
+});
+
+Route::middleware('auth:sanctum')->prefix('course')->group(function () {
+    Route::get('/', [CourseController::class, 'index']);
+    Route::post('/', [CourseController::class, 'store']);
+    Route::put('/{id}', [CourseController::class, 'update']);
+    Route::delete('/{id}', [CourseController::class, 'delete']);
+});
+
+Route::middleware('auth:sanctum')->prefix('lesson')->group(function () {
+    Route::get('/', [LessonController::class, 'index']);
+    Route::post('/', [LessonController::class, 'store']);
+    Route::put('/{id}', [LessonController::class, 'update']);
+    Route::delete('/{id}', [LessonController::class, 'delete']);
+});
+
+Route::middleware('auth:sanctum')->prefix('quiz')->group(function () {
+    // Route::get('/', [QuizzeController::class, 'index']);
+    Route::post('/', [QuizzeController::class, 'store']);
+    Route::put('/{id}', [QuizzeController::class, 'update']);
+    // Route::delete('/{id}', [QuizzeController::class, 'delete']);
 });
 
 Route::middleware('auth:sanctum')->prefix('chat-ai')->group(function () {
