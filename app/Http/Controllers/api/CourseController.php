@@ -15,7 +15,7 @@ class CourseController extends Controller
         $id = $request->input('id');
         $title = $request->input('title');
         $limit = $request->input('limit', 25);
-        $course = Course::with('lessons.quiz.question.answer');
+        $course = Course::with('lessons', 'quiz.question.answer');
         if ($id) {
             $course = $course->where('id', $id)->first();
             if (!$course) {

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('quizzes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('lesson_id')->nullable();
+            $table->foreignId('course_id')->nullable();
             $table->string('title')->nullable();
             $table->bigInteger('duration')->default(0);
             $table->timestamps();

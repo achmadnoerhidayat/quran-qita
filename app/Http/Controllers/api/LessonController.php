@@ -15,7 +15,7 @@ class LessonController extends Controller
         $id = $request->input('id');
         $course_id = $request->input('course_id');
         $limit = $request->input('limit', 25);
-        $lesson = Lesson::with('course', 'quiz.question.answer');
+        $lesson = Lesson::with('course.quiz.question.answer');
         if ($id) {
             $lesson = $lesson->find($id);
             if (!$lesson) {

@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Quizze extends Model
 {
-    protected $fillable = ['lesson_id', 'title', 'duration'];
+    protected $fillable = ['course_id', 'title', 'duration'];
 
-    protected $hidden = ['lesson_id'];
+    protected $hidden = ['course_id'];
 
-    public function lesson()
+    public function course()
     {
-        return $this->belongsTo(Lesson::class, 'lesson_id');
+        return $this->belongsTo(Course::class, 'course_id');
     }
 
     public function question()

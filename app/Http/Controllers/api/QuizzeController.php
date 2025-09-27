@@ -14,7 +14,7 @@ class QuizzeController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'lesson_id' => ['required', 'numeric'],
+            'course_id' => ['required', 'numeric'],
             'title' => ['required', 'string'],
             'duration' => ['required', 'numeric'],
 
@@ -36,7 +36,7 @@ class QuizzeController extends Controller
             }
             DB::beginTransaction();
             $quiz = Quizze::create([
-                'lesson_id' => $data['lesson_id'],
+                'course_id' => $data['course_id'],
                 'title' => $data['title'],
                 'duration' => $data['duration'],
             ]);
@@ -64,7 +64,7 @@ class QuizzeController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->validate([
-            'lesson_id' => ['required', 'numeric'],
+            'course_id' => ['required', 'numeric'],
             'title' => ['required', 'string'],
             'duration' => ['required', 'numeric'],
 
@@ -92,7 +92,7 @@ class QuizzeController extends Controller
                 return ResponseFormated::error(null, 'data kuis tidak ditemukan', 404);
             }
             $quiz->update([
-                'lesson_id' => $data['lesson_id'],
+                'course_id' => $data['course_id'],
                 'title' => $data['title'],
                 'duration' => $data['duration'],
             ]);
