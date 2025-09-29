@@ -161,9 +161,12 @@ Route::middleware('auth:sanctum')->prefix('lesson')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->prefix('quiz')->group(function () {
-    // Route::get('/', [QuizzeController::class, 'index']);
+    Route::get('/result', [QuizzeController::class, 'result']);
+    Route::get('/leaderboard', [QuizzeController::class, 'leaderboard']);
     Route::post('/', [QuizzeController::class, 'store']);
     Route::put('/{id}', [QuizzeController::class, 'update']);
+    Route::post('/start', [QuizzeController::class, 'start']);
+    Route::post('/submit', [QuizzeController::class, 'submit']);
     // Route::delete('/{id}', [QuizzeController::class, 'delete']);
 });
 
