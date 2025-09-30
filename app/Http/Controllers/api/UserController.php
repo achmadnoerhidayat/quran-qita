@@ -149,4 +149,16 @@ class UserController extends Controller
             return ResponseFormated::error(null, $e->getMessage(), 403);
         }
     }
+
+    public function updateFcmToken(Request $request)
+    {
+        $data = $request->validate([
+            'device_id' => ['required', 'string']
+        ]);
+        $user = User::where('id', $request->user()->id)->first();
+        $user->update([
+            'device_id' => $data['device_id']
+        ]);
+        return ResponseFormated::success(null, 'data device token berhasil ditambahkan');
+    }
 }

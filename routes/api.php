@@ -46,6 +46,7 @@ Route::group(['prefix' => 'auth'], function () {
 Route::middleware('auth:sanctum')->prefix('user')->group(function () {
     Route::get('/', [UserController::class, 'index']);
     Route::post('/', [UserController::class, 'store']);
+    Route::post('/generate-token', [UserController::class, 'updateFcmToken']);
     Route::put('/{id}', [UserController::class, 'update']);
     Route::delete('/{id}', [UserController::class, 'delete']);
 });
