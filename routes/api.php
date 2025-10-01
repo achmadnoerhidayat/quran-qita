@@ -128,6 +128,7 @@ Route::middleware('auth:sanctum')->prefix('subscription')->group(function () {
 
 Route::middleware('auth:sanctum')->prefix('reminder')->group(function () {
     Route::get('/', [ReminderController::class, 'index']);
+    Route::get('/test-notif', [ReminderController::class, 'testingNotifikasi']);
     Route::post('/', [ReminderController::class, 'store']);
     Route::put('/{id}', [ReminderController::class, 'update']);
     Route::delete('/{id}', [ReminderController::class, 'delete']);

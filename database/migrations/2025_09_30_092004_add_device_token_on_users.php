@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('device_id')->after('password')->nullable();
+            $table->string('lat')->after('device_id')->nullable();
+            $table->string('long')->after('lat')->nullable();
         });
     }
 
@@ -23,6 +25,8 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('device_id');
+            $table->dropColumn('lat');
+            $table->dropColumn('long');
         });
     }
 };

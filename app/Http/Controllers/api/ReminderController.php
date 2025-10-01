@@ -7,6 +7,9 @@ use App\Http\Controllers\ResponseFormated;
 use App\Models\Reminder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
+use Kreait\Laravel\Firebase\Facades\Firebase;
 
 class ReminderController extends Controller
 {
@@ -95,6 +98,28 @@ class ReminderController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return ResponseFormated::error(null, $e->getMessage(), 403);
+        }
+    }
+
+    public function testingNotifikasi(Request $request)
+    {
+        $user = $request->user();
+        $messaging = Firebase::messaging();
+        $message = CloudMessage::withTarget('token', $user->device_id)
+            ->withNotification(Notification::create(
+                'Tes FCM',
+                'Notifikasi dari Laravel berhasil!'
+            ));
+
+        try {
+            $messaging->send($message);
+            return ResponseFormated::success(null, '✅ FCM berhasil dikirim!');
+        } catch (\Kreait\Firebase\Exception\Messaging\NotFound $e) {
+            return ResponseFormated::error(null, '❌ Token FCM **tidak ditemukan / tidak valid**', 403);
+        } catch (\Kreait\Firebase\Exception\Messaging\InvalidArgument $e) {
+            return ResponseFormated::error(null, '❌ Token FCM **format salah / tidak cocok dengan project**', 403);
+        } catch (\Throwable $e) {
+            return ResponseFormated::error(null, '❌ Gagal kirim FCM: ' . $e->getMessage(), 403);
         }
     }
 }
