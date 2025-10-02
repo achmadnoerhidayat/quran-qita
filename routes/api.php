@@ -31,7 +31,7 @@ Route::get('tafsir', [SurahController::class, 'tafsir']);
 
 Route::get('doa', [DoaController::class, 'index']);
 
-Route::get('jadwal-sholat', [JadwalSholatController::class, 'index']);
+Route::middleware('auth:sanctum')->get('jadwal-sholat', [JadwalSholatController::class, 'index']);
 
 Route::get('masjid', [MasjidController::class, 'index']);
 
