@@ -57,13 +57,49 @@ class ScheduleDailyReminder extends Command
                 ->setDate(now()->year, now()->month, now()->day);
             if ($scheduledTime->isFuture()) {
                 $message = "Allahu Akbar! Waktunya Sholat {$name} Ayo Tunaikan.";
+                $title = "Waktu Sholat: {$name}";
                 SendFCMReminder::dispatch(
                     $user,
-                    $name,
+                    $title,
                     $message
                 )->delay($scheduledTime);
             }
         }
+    }
+
+    protected function schedulePlayerTahajudUser($user, $reminder)
+    {
+        if ($reminder->scheduled_at->isFuture()) {
+            $title = $reminder->title ?: $this->getDefaultTitle($reminder->reminder_type);
+            $message  = $this->getDefaultBody($reminder->reminder_type);
+            SendFCMReminder::dispatch(
+                $user,
+                $title,
+                $message
+            )->delay($reminder->scheduled_at);
+        }
+    }
+
+    protected function getDefaultTitle($type)
+    {
+        return match ($type) {
+            'sholat' => 'Pengingat Sholat',
+            'dzikir' => 'Waktunya Dzikir',
+            'tahajud' => 'Bangun Tahajud',
+            'puasa' => 'Pengingat Puasa',
+            default => 'Pengingat Aktivitas',
+        };
+    }
+
+    protected function getDefaultBody($type)
+    {
+        return match ($type) {
+            'sholat' => 'Jangan lupa sholat tepat waktu 🕌',
+            'dzikir' => 'Luangkan waktu sejenak untuk berdzikir ✨',
+            'tahajud' => 'Saatnya menunaikan tahajud 🌙',
+            'puasa' => 'Ingat niat puasa ya 🍽️',
+            default => 'Jangan lupa aktivitasmu hari ini ✅',
+        };
     }
 
     /**
@@ -88,7 +124,17 @@ class ScheduleDailyReminder extends Command
             }
             if ($reminders->reminder_type === 'sholat') {
                 $this->schedulePrayerTimesForUser($reminders->user);
+                $reminders->scheduled_at = $reminders->scheduled_at->addDay();
+                $reminders->save();
                 continue;
+            } else {
+                if ($reminders->scheduled_at > now()) {
+                    Log::info('job selain sholat jalan');
+                    $this->schedulePlayerTahajudUser($reminders->user, $reminders);
+                    $reminders->scheduled_at = $reminders->scheduled_at->addDay();
+                    $reminders->save();
+                    continue;
+                }
             }
         }
     }

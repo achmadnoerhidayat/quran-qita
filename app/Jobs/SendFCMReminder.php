@@ -18,16 +18,16 @@ class SendFCMReminder implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $user;
-    protected $sholat;
+    protected $title;
     protected $message;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($user, $sholat, $message)
+    public function __construct($user, $title, $message)
     {
         $this->user = $user;
-        $this->sholat = $sholat;
+        $this->title = $title;
         $this->message = $message;
     }
 
@@ -39,7 +39,7 @@ class SendFCMReminder implements ShouldQueue
         Log::info("Proses kirim Notifikasi {$this->user->name} dikirim ke token: {$this->user->device_id}");
         $messaging = Firebase::messaging();
         $messages = CloudMessage::withTarget('token', $this->user->device_id)->withNotification(Notification::create(
-            "Waktu Sholat: {$this->sholat}",
+            $this->title,
             $this->message
         ));
         try {

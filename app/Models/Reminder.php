@@ -17,6 +17,10 @@ class Reminder extends Model
 
     protected $hidden = ['user_id'];
 
+    protected $casts = [
+        "scheduled_at" => "datetime",
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
