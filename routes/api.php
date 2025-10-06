@@ -9,6 +9,7 @@ use App\Http\Controllers\api\CourseController;
 use App\Http\Controllers\api\DoaController;
 use App\Http\Controllers\api\DonasiController;
 use App\Http\Controllers\api\ForumController;
+use App\Http\Controllers\api\HajiUmrohController;
 use App\Http\Controllers\api\HighlightController;
 use App\Http\Controllers\api\JadwalSholatController;
 use App\Http\Controllers\api\JournalController;
@@ -170,6 +171,10 @@ Route::middleware('auth:sanctum')->prefix('quiz')->group(function () {
     Route::post('/start', [QuizzeController::class, 'start']);
     Route::post('/submit', [QuizzeController::class, 'submit']);
     // Route::delete('/{id}', [QuizzeController::class, 'delete']);
+});
+
+Route::middleware('auth:sanctum')->prefix('haji-umroh')->group(function () {
+    Route::get('/', [HajiUmrohController::class, 'index']);
 });
 
 Route::middleware('auth:sanctum')->prefix('chat-ai')->group(function () {
