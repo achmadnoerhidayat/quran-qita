@@ -41,8 +41,79 @@
             </header>
 
             <main class="p-4 md:p-8 flex-1">
-                <h1 class="text-3xl font-bold text-gray-800 mb-6">Selamat Datang {{ $user->name }} </h1>
-                <p class="text-gray-600">Sistem manajemen dan visualisasi data yang responsif.</p>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4 my-2">
+
+                    <a href="/user"
+                        class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                        <p class="font-normal text-gray-700 dark:text-gray-400">Total Pengguna</p>
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $count_user }}
+                        </h5>
+                    </a>
+
+                    <a href="#"
+                        class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                        <p class="font-normal text-gray-700 dark:text-gray-400">Hafalan Aktif</p>
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">2,134
+                        </h5>
+                    </a>
+
+                    <a href="#"
+                        class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                        <p class="font-normal text-gray-700 dark:text-gray-400">Pendapatan Langganan</p>
+                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Rp
+                            {{ $count_subs }}
+                        </h5>
+                    </a>
+
+                </div>
+                <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
+                    <div class="flex justify-between mb-3">
+                        <p class="font-bold my-auto ml-3">
+                            Aktivitas Terbaru
+                        </p>
+                        <div class="w-1/4 mr-3">
+                            <input type="text" name="search" id="password"
+                                class="bg-gray-50 border @error('password') border-red-500 @else border-gray-300 focus:border-primary-600 dark:border-gray-600 dark:focus:border-blue-500 @enderror text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-white-100 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500"
+                                value="{{ old('search') }}" placeholder="Cari Aktivitas" />
+                        </div>
+                    </div>
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-700">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    Tanggal
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Pengguna
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Aksi
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Detail
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($subscription as $news)
+                                <tr class="bg-white border-b border-gray-200">
+                                    <td class="px-6 py-4">
+                                        {{ $news->created_at->translatedFormat('d F Y') }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ $news->user->name }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        Langganan
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ $news->plan->duration }} Hari
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </main>
         </div>
 

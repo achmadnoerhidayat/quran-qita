@@ -29,6 +29,21 @@
                 class="absolute left-full ml-3 px-3 py-1 bg-gray-700 text-xs rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 md:hidden sidebar-tooltip">Dashboard</span>
         </a>
 
+        <a href="/quran" @class([
+            'flex items-center p-3 rounded-lg hover:bg-gray-800 hover:text-white font-medium transition duration-200 group relative',
+            $class => $title === 'Dashboard quran',
+        ])>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 flex-shrink-0" viewBox="0 0 24 24"
+                fill="currentColor">
+                <path
+                    d="M21 21H13V6C13 4.34315 14.3431 3 16 3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21ZM11 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H8C9.65685 3 11 4.34315 11 6V21ZM11 21H13V23H11V21Z">
+                </path>
+            </svg>
+            <span class="nav-text ml-3 whitespace-nowrap">Qur'an</span>
+            <span
+                class="absolute left-full ml-3 px-3 py-1 bg-gray-700 text-xs rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 md:hidden sidebar-tooltip">Dashboard</span>
+        </a>
+
         <a href="/haji-umroh" @class([
             'flex items-center p-3 rounded-lg hover:bg-gray-800 hover:text-white font-medium transition duration-200 group relative',
             $class => $title === 'Dashboard Haji Umroh',

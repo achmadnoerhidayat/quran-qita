@@ -3,6 +3,7 @@
 use App\Http\Controllers\web\DashController;
 use App\Http\Controllers\web\LoginController;
 use App\Http\Controllers\web\NewsHajiUmrohhController;
+use App\Http\Controllers\web\QuranController;
 use App\Http\Controllers\web\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -45,4 +46,12 @@ Route::middleware('auth')->prefix('user')->group(function () {
     Route::get('/{id}', [UserController::class, 'show']);
     Route::post('/', [UserController::class, 'store'])->name('store-user');
     Route::put('/{id}', [UserController::class, 'update'])->name('update-user');
+});
+
+Route::middleware('auth')->prefix('quran')->group(function () {
+    Route::get('/', [QuranController::class, 'index']);
+    Route::get('/{id}', [QuranController::class, 'show']);
+    Route::get('/edit/{id}', [QuranController::class, 'edit']);
+    Route::put('/{id}', [QuranController::class, 'update'])->name('edit-quran');
+    Route::post('/delete-audio/{id}', [QuranController::class, 'deleteAudio'])->name('delete-audio-quran');
 });

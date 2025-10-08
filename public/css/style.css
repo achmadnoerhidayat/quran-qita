@@ -1,0 +1,26 @@
+@font-face {
+    font-family: "LPMQ";
+    src: url("https://kangismet.github.io/fonts/lpmq.eot");
+    src: url("https://kangismet.github.io/fonts/lpmq.eot?#iefix")
+            format("embedded-opentype"),
+        url("https://kangismet.github.io/fonts/lpmq.ttf") format("truetype");
+    font-weight: 400;
+    font-weight: normal;
+    font-display: swap;
+}
+.surah-arab {
+    /* line-height: 48px; */
+    font-family: LPMQ, "Traditional Arabic", Tahoma, sans-serif;
+    font-weight: normal;
+    text-align: right;
+    direction: rtl;
+}
+
+.ayat-arab {
+    font-size: 1.5rem;
+    line-height: 48px;
+    font-family: LPMQ, "Traditional Arabic", Tahoma, sans-serif;
+    font-weight: normal;
+    text-align: right;
+    direction: rtl;
+}
