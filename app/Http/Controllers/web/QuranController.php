@@ -147,7 +147,12 @@ class QuranController extends Controller
     public function uploadAudio(Request $request)
     {
         $request->validate([
-            'audio' => ['required', 'file', 'mimes:mp3']
+            'audio' => [
+                'required',
+                'file',
+                'mimetypes:audio/mpeg,audio/mpga,audio/mp3',
+                'max:10240'
+            ]
         ]);
 
         if ($request->hasFile('audio')) {
