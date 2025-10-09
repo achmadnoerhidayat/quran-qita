@@ -108,7 +108,7 @@ class AyatController extends Controller
             'audio' => [
                 'required',
                 'file',
-                'mimetypes:audio/mpeg,audio/mpga,audio/mp3',
+                'mimes:mp3,mpeg,mpga',
                 'max:10240'
             ]
         ]);
