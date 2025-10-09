@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\web\AyatController;
 use App\Http\Controllers\web\DashController;
 use App\Http\Controllers\web\LoginController;
 use App\Http\Controllers\web\NewsHajiUmrohhController;
@@ -53,5 +54,13 @@ Route::middleware('auth')->prefix('quran')->group(function () {
     Route::get('/{id}', [QuranController::class, 'show']);
     Route::get('/edit/{id}', [QuranController::class, 'edit']);
     Route::put('/{id}', [QuranController::class, 'update'])->name('edit-quran');
+    Route::post('/upload-audio', [QuranController::class, 'uploadAudio'])->name('upload-audio-quran');
     Route::post('/delete-audio/{id}', [QuranController::class, 'deleteAudio'])->name('delete-audio-quran');
+});
+
+Route::middleware('auth')->prefix('ayat')->group(function () {
+    Route::get('/edit/{id}', [AyatController::class, 'edit']);
+    Route::put('/{id}', [AyatController::class, 'update'])->name('edit-ayat');
+    Route::post('/upload-audio', [AyatController::class, 'uploadAudio'])->name('upload-audio-ayat');
+    Route::post('/delete-audio/{id}', [AyatController::class, 'deleteAudio'])->name('delete-audio-ayat');
 });

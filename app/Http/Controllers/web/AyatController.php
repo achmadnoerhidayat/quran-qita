@@ -3,55 +3,15 @@
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
-use App\Models\Surah;
+use App\Models\Ayat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class QuranController extends Controller
+class AyatController extends Controller
 {
-    public function index(Request $request)
-    {
-        $limit = $request->input('limit', 25);
-        $user = Auth::user();
-        if (empty($user)) {
-            return redirect()->intended('/login');
-        }
-        if (!in_array($user->role, ['admin', 'super-admin'])) {
-            return redirect()->intended('/logout');
-        }
-        $data = Surah::with('ayat')->paginate($limit);
-        return view('quran.index', [
-            'data' => $data,
-            'title' => 'Dashboard quran',
-            'class' => 'text-white bg-gray-700'
-        ]);
-    }
-
-    public function show($id)
-    {
-        $user = Auth::user();
-        if (empty($user)) {
-            return redirect()->intended('/login');
-        }
-        if (!in_array($user->role, ['admin', 'super-admin'])) {
-            return redirect()->intended('/logout');
-        }
-        $data = Surah::with('ayat')->where('id', $id)->first();
-        if (!$data) {
-            return back()->withErrors([
-                'error' => 'data surah tidak ditemukan',
-            ]);
-        }
-        return view('quran.show', [
-            'data' => $data,
-            'title' => 'Dashboard quran',
-            'class' => 'text-white bg-gray-700'
-        ]);
-    }
-
     public function edit($id)
     {
         $user = Auth::user();
@@ -61,13 +21,13 @@ class QuranController extends Controller
         if (!in_array($user->role, ['admin', 'super-admin'])) {
             return redirect()->intended('/logout');
         }
-        $data = Surah::with('ayat')->where('id', $id)->first();
+        $data = Ayat::find($id);
         if (!$data) {
             return back()->withErrors([
                 'error' => 'data surah tidak ditemukan',
             ]);
         }
-        return view('quran.edit', [
+        return view('ayat.edit', [
             'data' => $data,
             'title' => 'Dashboard quran',
             'class' => 'text-white bg-gray-700'
@@ -77,27 +37,25 @@ class QuranController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->validate([
-            'nomor' => ['required', 'numeric'],
-            'nama' => ['required', 'string'],
-            'nama_latin' => ['required', 'string'],
-            'jumlah_ayat' => ['required', 'numeric'],
-            'tempat_turun' => ['required', 'string'],
-            'arti' => ['required', 'string'],
-            'arti_english' => ['required', 'string'],
-            'deskripsi' => ['required', 'string'],
-            'audio_full' => ['required', 'array'],
+            'nomor_ayat' => ['required', 'numeric'],
+            'teks_arab' => ['required', 'string'],
+            'teks_latin' => ['required', 'string'],
+            'teks_indo' => ['required', 'string'],
+            'teks_english' => ['required', 'string'],
+            'audio' => ['required', 'array'],
+            'audio.*' => ['required', 'url'],
         ]);
-        $data['audio_full'] = collect($data['audio_full'])->mapWithKeys(function ($value, $index) {
+        $data['audio'] = collect($data['audio'])->mapWithKeys(function ($value, $index) {
             // ubah angka jadi string dua digit (leading zero)
             $key = str_pad($index + 1, 2, '0', STR_PAD_LEFT); // jadi '01', '02', dst
             return [$key => $value];
         })->toArray();
         try {
             DB::beginTransaction();
-            $surah = Surah::find($id);
+            $surah = Ayat::find($id);
             if (!$surah) {
                 return back()->withErrors([
-                    'error' => 'data surah tidak ditemukan',
+                    'error' => 'data ayat tidak ditemukan',
                 ]);
             }
             $surah->update($data);
@@ -114,10 +72,10 @@ class QuranController extends Controller
     public function deleteAudio(Request $request, $id)
     {
         $data = $request->validate(['audio' => ['required']]);
-        $surah = Surah::find($id);
+        $surah = Ayat::find($id);
         if (!$surah) {
             return back()->withErrors([
-                'error' => 'data surah tidak ditemukan',
+                'error' => 'data ayat tidak ditemukan',
             ]);
         }
         $audioToRemove = $data['audio'];
@@ -128,7 +86,7 @@ class QuranController extends Controller
                 Storage::disk('public')->delete($relativePath);
             }
         }
-        $audios = array_filter($surah->audio_full ?? [], function ($audio) use ($audioToRemove) {
+        $audios = array_filter($surah->audio ?? [], function ($audio) use ($audioToRemove) {
             return $audio !== $audioToRemove;
         });
         $data = collect($audios)->mapWithKeys(function ($value, $index) {
@@ -136,7 +94,7 @@ class QuranController extends Controller
             $key = str_pad($index + 1, 2, '0', STR_PAD_LEFT); // jadi '01', '02', dst
             return [$key => $value];
         })->toArray();
-        $surah->audio_full = $data;
+        $surah->audio = $data;
         $surah->save();
         return response()->json([
             'success' => true,
@@ -152,7 +110,7 @@ class QuranController extends Controller
 
         if ($request->hasFile('audio')) {
             $photo = $request->file('audio');
-            $url = $photo->store('asset/surah', 'public');
+            $url = $photo->store('asset/ayat', 'public');
             return response()->json([
                 'success' => true,
                 'url' => asset('storage/' . $url)

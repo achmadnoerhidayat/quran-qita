@@ -95,8 +95,21 @@
                                     <span class="sr-only">Icon description</span>
                                 </span>
                             </div>
-                            <div class="flex w-[90%] justify-between">
-
+                            <div class="flex w-[90%] justify-end">
+                                <a href="#"
+                                    class="inline-flex items-center justify-center w-6 h-6 me-2 text-sm font-semibold text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300 mr-2">
+                                    <p class="text-gray-900 dark:text-white">
+                                        <i class="ri-file-copy-2-line"></i>
+                                    </p>
+                                    <span class="sr-only">Icon description</span>
+                                </a>
+                                <a href="/ayat/edit/{{ $ayat->id }}"
+                                    class="inline-flex items-center justify-center w-6 h-6 me-2 text-sm font-semibold text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">
+                                    <p class="text-gray-900 dark:text-white">
+                                        <i class="ri-edit-circle-line"></i>
+                                    </p>
+                                    <span class="sr-only">Icon description</span>
+                                </a>
                             </div>
 
                         </div>

@@ -103,7 +103,9 @@
                             </div>
                         </div>
                     @endforeach
-
+                </div>
+                <div class="mt-2">
+                    {{ $data->links() }}
                 </div>
 
 
