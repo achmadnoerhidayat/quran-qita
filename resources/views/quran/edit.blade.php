@@ -177,7 +177,6 @@
                 }
             });
             $(document).on('click', '.remove-audio', function() {
-                console.log('babi');
                 const id = $(this).data('id');
                 const url = $(this).data('url');
                 if (id === null) {

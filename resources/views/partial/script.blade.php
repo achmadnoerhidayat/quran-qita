@@ -26,8 +26,28 @@
         }
     });
 
+    const toggles = document.querySelectorAll('.menu-toggle');
+
+    toggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            const targetId = toggle.getAttribute('data-target');
+            const submenu = document.getElementById(targetId);
+            const arrow = toggle.querySelector('.menu-arrow');
+
+            const isOpen = submenu.style.maxHeight && submenu.style.maxHeight !== '0px';
+
+            if (isOpen) {
+                submenu.style.maxHeight = '0px';
+                arrow.classList.remove('rotate-180');
+            } else {
+                submenu.style.maxHeight = submenu.scrollHeight + 'px';
+                arrow.classList.add('rotate-180');
+            }
+        });
+    });
+
     // Atur agar menu tertutup saat dimuat (initial state)
-    dashboardSubmenu.style.maxHeight = '0px';
+    {{--  dashboardSubmenu.style.maxHeight = '0px';  --}}
 
     // === FUNGSI MINIMIZE/MAXIMIZE SIDEBAR (Desktop) ===
     const toggleSidebarModeBtn = document.getElementById('toggle-sidebar-mode');
@@ -47,7 +67,7 @@
             logoIcon.classList.remove('hidden');
             navTexts.forEach(el => el.classList.add('hidden'));
             tooltips.forEach(el => el.classList.remove('md:hidden')); // Tampilkan tooltip
-            dashboardSubmenu.style.maxHeight = '0px'; // Tutup semua accordion
+            // dashboardSubmenu.style.maxHeight = '0px'; // Tutup semua accordion
         } else {
             // Mode FULL
             sidebar.classList.remove('sidebar-mini');

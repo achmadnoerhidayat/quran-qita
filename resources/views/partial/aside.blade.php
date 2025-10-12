@@ -39,10 +39,43 @@
                     d="M21 21H13V6C13 4.34315 14.3431 3 16 3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21ZM11 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H8C9.65685 3 11 4.34315 11 6V21ZM11 21H13V23H11V21Z">
                 </path>
             </svg>
-            <span class="nav-text ml-3 whitespace-nowrap">Qur'an</span>
+            <span class="nav-text ml-3 whitespace-nowrap">Quran</span>
             <span
                 class="absolute left-full ml-3 px-3 py-1 bg-gray-700 text-xs rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 md:hidden sidebar-tooltip">Dashboard</span>
         </a>
+
+        <div class="relative group menu-group">
+            <button @class([
+                'menu-toggle flex items-center w-full p-3 rounded-lg text-white font-semibold transition duration-200 hover:bg-gray-800 focus:outline-none',
+                $class => $title === 'Dashboard Learning',
+            ]) data-target="submenu-learning">
+                <span class="flex items-center flex-1 justify-start">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 flex-shrink-0" viewBox="0 0 24 24"
+                        fill="currentColor">
+                        <path
+                            d="M20 22H6.5C4.567 22 3 20.433 3 18.5V5C3 3.34315 4.34315 2 6 2H20C20.5523 2 21 2.44772 21 3V21C21 21.5523 20.5523 22 20 22ZM19 20V17H6.5C5.67157 17 5 17.6716 5 18.5C5 19.3284 5.67157 20 6.5 20H19Z">
+                        </path>
+                    </svg>
+                    <span class="nav-text ml-3 whitespace-nowrap">Belajar</span>
+                </span>
+                <svg id="dashboard-arrow"
+                    class="menu-arrow w-5 h-5 transition-transform duration-300 transform nav-arrow" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+                <span
+                    class="absolute left-full ml-3 px-3 py-1 bg-gray-700 text-xs rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 md:hidden sidebar-tooltip">Belajar</span>
+            </button>
+
+            <div id="submenu-learning" class="submenu-container mt-1" style="max-height: 0px;">
+                <a href="/course"
+                    class="block py-2 pl-12 text-gray-400 hover:bg-gray-800 hover:text-white transition duration-200 rounded-lg">Kursus</a>
+                <a href="/lesson"
+                    class="block py-2 pl-12 text-gray-400 hover:bg-gray-800 hover:text-white transition duration-200 rounded-lg">Materi</a>
+                <a href="/kuis"
+                    class="block py-2 pl-12 text-gray-400 hover:bg-gray-800 hover:text-white transition duration-200 rounded-lg">Kuis</a>
+            </div>
+        </div>
 
         <a href="/haji-umroh" @class([
             'flex items-center p-3 rounded-lg hover:bg-gray-800 hover:text-white font-medium transition duration-200 group relative',
@@ -74,11 +107,11 @@
             <span
                 class="absolute left-full ml-3 px-3 py-1 bg-gray-700 text-xs rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 md:hidden sidebar-tooltip">Pengguna</span>
         </a>
-        <div class="relative group">
+        <div class="relative group menu-group">
             <button id="dashboard-toggle" @class([
-                'flex items-center w-full p-3 rounded-lg text-gray-400 font-semibold transition duration-200 hover:bg-gray-800 focus:outline-none',
+                'menu-toggle flex items-center w-full p-3 rounded-lg text-gray-400 font-semibold transition duration-200 hover:bg-gray-800 focus:outline-none',
                 $class => $title === 'Dashboard Setting',
-            ])>
+            ]) data-target="submenu-setting">
                 <span class="flex items-center flex-1 justify-start">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 flex-shrink-0" viewBox="0 0 24 24"
                         fill="currentColor">
@@ -88,15 +121,15 @@
                     </svg>
                     <span class="nav-text ml-3 whitespace-nowrap">Pengaturan</span>
                 </span>
-                <svg id="dashboard-arrow" class="w-5 h-5 transition-transform duration-300 transform nav-arrow"
-                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="menu-arrow w-5 h-5 transition-transform duration-300 transform nav-arrow" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
                 <span
                     class="absolute left-full ml-3 px-3 py-1 bg-gray-700 text-xs rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 md:hidden sidebar-tooltip">Dashboard</span>
             </button>
 
-            <div id="dashboard-submenu" class="submenu-container mt-1" style="max-height: 0px;">
+            <div id="submenu-setting" class="submenu-container mt-1" style="max-height: 0px;">
                 <a href="/logout"
                     class="block py-2 pl-12 text-gray-400 hover:bg-gray-800 hover:text-white transition duration-200 rounded-lg">Logout</a>
             </div>
