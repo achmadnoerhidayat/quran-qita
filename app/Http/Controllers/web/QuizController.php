@@ -100,7 +100,7 @@ class QuizController extends Controller
                         'question_url' => isset($question['question_url']) ? $question['question_url'] : null,
                     ]);
                     foreach ($question['answer'] as $value) {
-                        if (isset($value['id'])) {
+                        if (isset($value['id']) && $value['id'] !== '0') {
                             $dataAnswer = Answer::find($value['id']);
                             $dataAnswer->update([
                                 'question_id' => $dataQuiz->id,

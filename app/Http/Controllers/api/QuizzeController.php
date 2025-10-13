@@ -275,7 +275,12 @@ class QuizzeController extends Controller
             return ResponseFormated::success($attemp, 'data ujian berhasil ditampilkan');
         }
         if ($quiz_id) {
-            $attemp = $attemp->where('quiz_id', $quiz_id);
+            $user_id = $request->user()->id;
+            $score = UserScore::whereHas('attemp', function ($q) use ($quiz_id, $user_id) {
+                $q->where('quiz_id', $quiz_id)->where('user_id', $user_id);
+            })->first();
+            $score['user'] = $request->user();
+            return ResponseFormated::success($score, 'data score berhasil ditampilkan');
         }
         $attemp = $attemp->where('user_id', $request->user()->id)->paginate($limit);
         return ResponseFormated::success($attemp, 'data ujian berhasil ditampilkan');
