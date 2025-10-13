@@ -75,6 +75,86 @@ class QuizController extends Controller
         }
     }
 
+    public function edit($id)
+    {
+        $user = Auth::user();
+        if (empty($user)) {
+            return redirect()->intended('/login');
+        }
+        if (!in_array($user->role, ['admin', 'super-admin'])) {
+            return redirect()->intended('/logout');
+        }
+        $data = Quizze::with('course', 'question')->find($id);
+        $course = Course::all();
+        return view('quiz.edit', [
+            'data' => $data,
+            'course' => $course,
+            'title' => 'Dashboard Learning',
+            'class' => 'text-white bg-gray-700'
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate([
+            'course_id' => ['required', 'numeric'],
+            'title' => ['required', 'string'],
+            'duration' => ['nullable', 'numeric'],
+        ]);
+
+        try {
+            DB::beginTransaction();
+            $quiz = Quizze::find($id);
+            if (!$quiz) {
+                return back()->withErrors([
+                    'error' => 'data materi tidak ditemukan',
+                ]);
+            }
+            $quiz->update($data);
+            DB::commit();
+            return redirect()->intended('/kuis');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors([
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function delete($id)
+    {
+
+        try {
+            DB::beginTransaction();
+            $quiz = Quizze::find($id);
+            if (!$quiz) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'data materi tidak ditemukan.'
+                ]);
+            }
+            $question = Question::where('quiz_id', $quiz->id)->get();
+            $quiz->delete();
+            if (count($question) > 0) {
+                foreach ($question as $value) {
+                    $value->delete();
+                    $value->answer()->delete();
+                }
+            }
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'data materi berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
+
     public function addSoal(Request $request, $id)
     {
         $data = $request->validate([
@@ -135,6 +215,33 @@ class QuizController extends Controller
             DB::rollBack();
             return back()->withErrors([
                 'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function deleteSoal($id)
+    {
+        try {
+            $quiz = Question::find($id);
+            if (!$quiz) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'soal tidak ditemukan.'
+                ]);
+            }
+            DB::beginTransaction();
+            $quiz->delete();
+            $quiz->answer()->delete();
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'soal berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
             ]);
         }
     }

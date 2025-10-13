@@ -98,6 +98,11 @@
                                                 title="Tambah Soal">
                                                 <i class="ri-play-list-add-fill"></i>
                                             </a>
+                                            <a href="javascript:void(0)" class="text-[18px] mx-2 delete-kuis"
+                                                data-id="{{ $news->id }}" data-title="{{ $news->title }}"
+                                                title="Delete Soal">
+                                                <i class="ri-delete-bin-6-fill"></i>
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>
@@ -167,6 +172,42 @@
             //    .catch(error => {
             //       console.error(error);
             //  });
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $(document).on('click', '.delete-kuis', function() {
+                const id = $(this).data('id');
+                const title = $(this).data('title');
+                Swal.fire({
+                    title: 'Yakin hapus Kuis?',
+                    text: title,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/kuis/' + id,
+                            method: 'POST',
+                            data: {
+                                _method: 'DELETE',
+                            },
+                            success: function(response) {
+                                Swal.fire('Berhasil!', response.message, 'success')
+                                    .then(() => location.reload());
+                            },
+                            error: function(xhr) {
+                                Swal.fire('Gagal!', response.message, 'error');
+                            }
+                        });
+                    }
+                });
+            });
 
             function showModal() {
                 document.getElementById('errorModal').classList.remove('hidden');

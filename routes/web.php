@@ -73,6 +73,7 @@ Route::middleware('auth')->prefix('course')->group(function () {
     Route::get('/edit/{id}', [CourseController::class, 'edit']);
     Route::put('/{id}', [CourseController::class, 'update'])->name('update-course');
     Route::post('/', [CourseController::class, 'store'])->name('store-course');
+    Route::delete('/{id}', [CourseController::class, 'delete']);
 });
 
 Route::middleware('auth')->prefix('lesson')->group(function () {
@@ -80,11 +81,16 @@ Route::middleware('auth')->prefix('lesson')->group(function () {
     Route::get('/edit/{id}', [LessonController::class, 'edit']);
     Route::post('/', [LessonController::class, 'store'])->name('store-lesson');
     Route::put('/{id}', [LessonController::class, 'update'])->name('update-lesson');
+    Route::delete('/{id}', [LessonController::class, 'delete']);
 });
 
 Route::middleware('auth')->prefix('kuis')->group(function () {
     Route::get('/', [QuizController::class, 'index']);
     Route::get('/add-question/{id}', [QuizController::class, 'addQuestion']);
+    Route::get('/edit/{id}', [QuizController::class, 'edit']);
     Route::post('/', [QuizController::class, 'store'])->name('store-quiz');
+    Route::put('/{id}', [QuizController::class, 'update'])->name('update-quiz');
+    Route::delete('/{id}', [QuizController::class, 'delete'])->name('delete-quiz');
     Route::post('/add-soal/{id}', [QuizController::class, 'addSoal'])->name('add-soal-quiz');
+    Route::post('/delete-soal/{id}', [QuizController::class, 'deleteSoal']);
 });

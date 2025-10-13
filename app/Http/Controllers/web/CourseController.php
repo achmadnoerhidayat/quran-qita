@@ -86,4 +86,38 @@ class CourseController extends Controller
             ]);
         }
     }
+
+    public function delete($id)
+    {
+        try {
+            DB::beginTransaction();
+            $course = Course::find($id);
+            if (!$course) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'data kursus tidak ditemukan.'
+                ]);
+            }
+            $course->delete();
+            foreach ($course->quiz as $key => $quiz) {
+                $quiz->delete();
+                foreach ($quiz->question as $question) {
+                    $question->delete();
+                    $question->answer()->delete();
+                }
+            }
+            $course->lessons()->delete();
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'data kursus berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 }

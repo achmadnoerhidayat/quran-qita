@@ -41,9 +41,9 @@
             </header>
 
             <main class="p-4 md:p-8 flex-1">
-                <h2 class="text-lg font-bold mb-4 text-red-600">Edit Kursus Ngaji</h2>
+                <h2 class="text-lg font-bold mb-4 text-red-600">Edit Materi</h2>
                 <form class="space-y-4 md:space-y-6 mt-3" method="POST" enctype="multipart/form-data"
-                    action="{{ route('update-lesson', $data->id) }}">
+                    action="{{ route('update-quiz', $data->id) }}">
                     @csrf
                     @method('PUT')
                     <div>
@@ -63,23 +63,22 @@
                         @enderror
                     </div>
                     <div>
-                        <label for="body"
-                            class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Body</label>
-                        <textarea name="body" id="editor" cols="30" rows="10"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    {{ $data->body }}</textarea>
-                        @error('body')
+                        <label for="title"
+                            class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Title</label>
+                        <input type="title" name="title" id="title"
+                            class="bg-gray-50 border @error('title') border-red-500 @else border-gray-300 focus:border-primary-600 dark:border-gray-600 dark:focus:border-blue-500 @enderror text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-white-100 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500"
+                            value="{{ $data->title }}" placeholder="Masukan title ...." />
+                        @error('title')
                             <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                     <div>
-                        <label for="content_url"
-                            class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Content
-                            Url</label>
-                        <input type="content_url" name="content_url" id="content_url"
-                            class="bg-gray-50 border @error('content_url') border-red-500 @else border-gray-300 focus:border-primary-600 dark:border-gray-600 dark:focus:border-blue-500 @enderror text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-white-100 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500"
-                            value="{{ $data->content_url }}" placeholder="Masukan content_url ...." />
-                        @error('content_url')
+                        <label for="duration"
+                            class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Durasi</label>
+                        <input type="duration" name="duration" id="duration"
+                            class="bg-gray-50 border @error('duration') border-red-500 @else border-gray-300 focus:border-primary-600 dark:border-gray-600 dark:focus:border-blue-500 @enderror text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-white-100 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500"
+                            value="{{ $data->duration }}" placeholder="Masukan duration ...." />
+                        @error('duration')
                             <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                         @enderror
                     </div>

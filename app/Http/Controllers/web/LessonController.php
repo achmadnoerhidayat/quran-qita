@@ -93,4 +93,30 @@ class LessonController extends Controller
             ]);
         }
     }
+
+    public function delete($id)
+    {
+        try {
+            DB::beginTransaction();
+            $lesson = Lesson::find($id);
+            if (!$lesson) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'data materi tidak ditemukan.'
+                ]);
+            }
+            $lesson->delete();
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'data materi berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 }

@@ -56,7 +56,7 @@
                     <div class="list-question">
                         @foreach ($data->question as $key => $question)
                             <div
-                                class="w-full bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 my-3">
+                                class="w-full bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 my-3 soal-item">
                                 <div class="flex justify-between text-right p-5">
                                     <p class="text-gray-900 dark:text-white ayat-arab">
                                         Pertanyaan {{ $key + 1 }}
@@ -70,6 +70,14 @@
                                     </div>
                                 </div>
                                 <input type="hidden" name="question[{{ $key }}][id]" value="{{ $question->id }}">
+                                <div class="my-4 mx-4">
+                                    <label for="title"
+                                        class="block mb-2 text-sm font-medium text-white-100 dark:text-white">Url
+                                        Pembelajaran</label>
+                                    <input type="title" name="question[{{ $key }}][question_url]" id="title"
+                                        class="bg-gray-50 border border-gray-300 focus:border-primary-600 dark:border-gray-600 dark:focus:border-blue-500 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-white-100 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500"
+                                        value="{{ $question->question_url }}" placeholder="https://www.youtube.com" />
+                                </div>
                                 <div class="my-4 mx-4">
                                     <textarea name="question[{{ $key }}][question_text]" cols="30" rows="10"
                                         class="editor bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500 dark:focus:border-blue-500">{{ trim($question->question_text) }}</textarea>
@@ -157,6 +165,12 @@
             </script>
         @endif
         <script>
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
             function showModal() {
                 document.getElementById('errorModal').classList.remove('hidden');
             }
@@ -214,7 +228,7 @@
                                     </div>`;
                 }
                 var html = `<div
-                                class="w-full bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 my-3">
+                                class="w-full bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 my-3 soal-item">
                                 <div class="flex justify-between text-right p-5">
                                     <p class="text-gray-900 dark:text-white ayat-arab">
                                         Pertanyaan ${count}
@@ -228,6 +242,14 @@
                                     </div>
                                 </div>
                                 <input type="hidden" name="question[${count-1}][id]" value="0">
+                                <div class="my-4 mx-4">
+                                    <label for="title"
+                                        class="block mb-2 text-sm font-medium text-white-100 dark:text-white">Url
+                                        Pembelajaran</label>
+                                    <input type="text" name="question[${count-1}][question_url]" id="title"
+                                        class="bg-gray-50 border border-gray-300 focus:border-primary-600 dark:border-gray-600 dark:focus:border-blue-500 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-white-100 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500"
+                                        value="" placeholder="https://www.youtube.com" />
+                                </div>
                                 <div class="my-4 mx-4">
                                     <textarea name="question[${count-1}][question_text]" cols="30" rows="10"
                                         class="editor bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
@@ -296,6 +318,39 @@
                             }
                         });
                     });
+                });
+            });
+            $(document).on('click', '.remove-audio', function() {
+                const id = $(this).data('id');
+                let count = $('#add-pertanyaan').data('count');
+                count = count - 1;
+                $('#add-pertanyaan').data('count', count).attr('data-count', count);
+                if (id === 0) {
+                    $(this).closest('.soal-item').remove();
+                    return;
+                }
+                Swal.fire({
+                    title: 'Yakin hapus Soal?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/kuis/delete-soal/' + id,
+                            method: 'POST',
+                            success: function(response) {
+                                Swal.fire('Berhasil!', response.message, 'success')
+                                    .then(() => location.reload());
+                            },
+                            error: function(xhr) {
+                                Swal.fire('Gagal!', response.message, 'error');
+                            }
+                        });
+                    }
                 });
             });
         </script>
