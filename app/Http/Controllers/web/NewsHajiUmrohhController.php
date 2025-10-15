@@ -102,4 +102,37 @@ class NewsHajiUmrohhController extends Controller
             ]);
         }
     }
+
+    public function delete($id)
+    {
+
+        $url = null;
+        try {
+            DB::beginTransaction();
+            $news = HajiNews::with('user')->where('id', $id)->first();
+            if (!$news) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data Berita Haji Tidak Ditemukan.'
+                ]);
+            }
+            $url = $news->image;
+            if ($url) {
+                Storage::disk('public')->delete($url);
+            }
+            $news->delete();
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'data Berita Haji berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Storage::disk('public')->delete($url);
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 }

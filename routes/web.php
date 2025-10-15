@@ -42,6 +42,7 @@ Route::middleware('auth')->prefix('haji-umroh')->group(function () {
     Route::get('/{id}', [NewsHajiUmrohhController::class, 'show']);
     Route::post('/', [NewsHajiUmrohhController::class, 'store'])->name('store-haji');
     Route::put('/{id}', [NewsHajiUmrohhController::class, 'update'])->name('update-haji');
+    Route::delete('/{id}', [NewsHajiUmrohhController::class, 'delete']);
     // Route::post('/', [LoginController::class, 'login'])->name('login');
 });
 
@@ -50,6 +51,7 @@ Route::middleware('auth')->prefix('user')->group(function () {
     Route::get('/{id}', [UserController::class, 'show']);
     Route::post('/', [UserController::class, 'store'])->name('store-user');
     Route::put('/{id}', [UserController::class, 'update'])->name('update-user');
+    Route::delete('/{id}', [UserController::class, 'delete']);
 });
 
 Route::middleware('auth')->prefix('quran')->group(function () {

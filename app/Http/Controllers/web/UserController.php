@@ -103,4 +103,31 @@ class UserController extends Controller
             ]);
         }
     }
+
+    public function delete($id)
+    {
+
+        try {
+            DB::beginTransaction();
+            $user = User::find($id);
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'data user tidak ditemukan.'
+                ]);
+            }
+            $user->delete();
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'data user berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 }

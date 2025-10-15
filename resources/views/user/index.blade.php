@@ -83,9 +83,14 @@
                                         {{ $news->role }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <div class="flex">
-                                            <a href="/user/{{ $news->id }}">
+                                        <div class="flex justify-content-center">
+                                            <a href="/user/{{ $news->id }}" class="text-[18px] mx-2">
                                                 <i class="ri-edit-fill"></i>
+                                            </a>
+                                            <a href="javascript:void(0)" class="text-[18px] mx-2 delete-course"
+                                                data-id="{{ $news->id }}" data-name="{{ $news->name }}"
+                                                title="Delete Pengguna">
+                                                <i class="ri-delete-bin-6-fill"></i>
                                             </a>
                                         </div>
                                     </td>
@@ -166,6 +171,42 @@
             </script>
         @endif
         <script>
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $(document).on('click', '.delete-course', function() {
+                const id = $(this).data('id');
+                const name = $(this).data('name');
+                Swal.fire({
+                    title: 'Yakin hapus Pengguna?',
+                    text: name,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/user/' + id,
+                            method: 'POST',
+                            data: {
+                                _method: 'DELETE',
+                            },
+                            success: function(response) {
+                                Swal.fire('Berhasil!', response.message, 'success')
+                                    .then(() => location.reload());
+                            },
+                            error: function(xhr) {
+                                Swal.fire('Gagal!', response.message, 'error');
+                            }
+                        });
+                    }
+                });
+            });
             ClassicEditor
                 .create(document.querySelector('#editor'))
                 .catch(error => {
