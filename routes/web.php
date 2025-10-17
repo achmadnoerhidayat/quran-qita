@@ -3,6 +3,7 @@
 use App\Http\Controllers\web\AyatController;
 use App\Http\Controllers\web\CourseController;
 use App\Http\Controllers\web\DashController;
+use App\Http\Controllers\web\LanggananController;
 use App\Http\Controllers\web\LessonController;
 use App\Http\Controllers\web\LoginController;
 use App\Http\Controllers\web\NewsHajiUmrohhController;
@@ -95,4 +96,9 @@ Route::middleware('auth')->prefix('kuis')->group(function () {
     Route::delete('/{id}', [QuizController::class, 'delete'])->name('delete-quiz');
     Route::post('/add-soal/{id}', [QuizController::class, 'addSoal'])->name('add-soal-quiz');
     Route::post('/delete-soal/{id}', [QuizController::class, 'deleteSoal']);
+});
+
+Route::middleware('auth')->prefix('langganan')->group(function () {
+    Route::get('/', [LanggananController::class, 'index']);
+    Route::put('/{id}', [LanggananController::class, 'update']);
 });
