@@ -11,4 +11,9 @@ class Plan extends Model
     protected $casts = [
         'features' => 'array',
     ];
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class, 'plan_id');
+    }
 }

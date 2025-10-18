@@ -65,9 +65,6 @@
                                     Status
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Bukti Transfer
-                                </th>
-                                <th scope="col" class="px-6 py-3">
                                     Keterangan
                                 </th>
                                 <th scope="col" class="px-6 py-3">
@@ -109,16 +106,11 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        <img class="w-16 md:w-32 max-w-full max-h-full cursor-pointer show-img"
-                                            data-url="{{ asset('storage/' . $news->bukti_transfer) }}"
-                                            src="{{ asset('storage/' . $news->bukti_transfer) }}">
-                                    </td>
-                                    <td class="px-6 py-4">
                                         {{ $news->keterangan_admin }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        @if ($news->status === 'pending')
-                                            <div class="flex justify-content-center">
+                                        <div class="flex justify-content-center">
+                                            @if ($news->status === 'pending')
                                                 <a href="javascript:void(0)" class="text-[18px] mx-2 approve"
                                                     title="Setujui" data-id="{{ $news->id }}"
                                                     data-plan="{{ $news->plan->id }}">
@@ -129,8 +121,12 @@
                                                     title="Tolak">
                                                     <i class="ri-close-fill"></i>
                                                 </a>
-                                            </div>
-                                        @endif
+                                            @endif
+                                            <a href="/langganan/{{ $news->id }}" class="text-[18px] mx-2"
+                                                title="Detail">
+                                                <i class="ri-eye-2-line"></i>
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
@@ -212,6 +208,7 @@
                                 _method: 'PUT',
                                 plan_id: plan,
                                 payment_status: 'failed',
+                                status: 'cancelled',
                                 keterangan_admin: keterangan
                             },
                             success: function(response) {
@@ -225,14 +222,6 @@
                     },
                     allowOutsideClick: () => !Swal.isLoading()
                 }).then((result) => {});
-            });
-            $(document).on('click', '.show-img', function() {
-                $('.content').empty();
-                $("#errorModal").removeClass('hidden');
-                const url = $(this).data('url');
-                const html = `<img class="w-full h-auto max-w-xl rounded-lg cursor-pointer show-img"
-                                            src="${url}">`;
-                $('.content').append(html);
             });
 
             function showModal() {

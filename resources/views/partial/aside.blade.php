@@ -93,6 +93,22 @@
                 Umroh</span>
         </a>
 
+        <a href="/plan" @class([
+            'flex items-center p-3 rounded-lg hover:bg-gray-800 hover:text-white font-medium transition duration-200 group relative',
+            $class => $title === 'Dashboard Plan',
+        ])>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-6 h-6 flex-shrink-0"
+                fill="currentColor">
+                <path
+                    d="M7 5V2C7 1.44772 7.44772 1 8 1H16C16.5523 1 17 1.44772 17 2V5H21C21.5523 5 22 5.44772 22 6V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V6C2 5.44772 2.44772 5 3 5H7ZM4 15V19H20V15H4ZM11 11V13H13V11H11ZM9 3V5H15V3H9Z">
+                </path>
+            </svg>
+            <span class="nav-text ml-3 whitespace-nowrap">Plan</span>
+            <span
+                class="absolute left-full ml-3 px-3 py-1 bg-gray-700 text-xs rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 md:hidden sidebar-tooltip">Haji
+                Plan</span>
+        </a>
+
         <a href="/langganan" @class([
             'flex items-center p-3 rounded-lg hover:bg-gray-800 hover:text-white font-medium transition duration-200 group relative',
             $class => $title === 'Dashboard Langganan',

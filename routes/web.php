@@ -7,6 +7,7 @@ use App\Http\Controllers\web\LanggananController;
 use App\Http\Controllers\web\LessonController;
 use App\Http\Controllers\web\LoginController;
 use App\Http\Controllers\web\NewsHajiUmrohhController;
+use App\Http\Controllers\web\PlanController;
 use App\Http\Controllers\web\QuizController;
 use App\Http\Controllers\web\QuranController;
 use App\Http\Controllers\web\UserController;
@@ -98,7 +99,16 @@ Route::middleware('auth')->prefix('kuis')->group(function () {
     Route::post('/delete-soal/{id}', [QuizController::class, 'deleteSoal']);
 });
 
+Route::middleware('auth')->prefix('plan')->group(function () {
+    Route::get('/', [PlanController::class, 'index']);
+    Route::get('/{id}', [PlanController::class, 'show']);
+    Route::post('/', [PlanController::class, 'store'])->name('store-plan');
+    Route::put('/{id}', [PlanController::class, 'update'])->name('update-plan');
+    Route::delete('/{id}', [PlanController::class, 'delete']);
+});
+
 Route::middleware('auth')->prefix('langganan')->group(function () {
     Route::get('/', [LanggananController::class, 'index']);
+    Route::get('/{id}', [LanggananController::class, 'show']);
     Route::put('/{id}', [LanggananController::class, 'update']);
 });

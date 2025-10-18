@@ -21,8 +21,25 @@ class LanggananController extends Controller
         if (!in_array($user->role, ['admin', 'super-admin'])) {
             return redirect()->intended('/logout');
         }
-        $data = Subscription::with('user', 'plan')->orderBy('created_at', 'desc')->paginate(5);
+        $data = Subscription::with('user', 'plan')->orderBy('created_at', 'desc')->paginate(25);
         return view('langganan.index', [
+            'data' => $data,
+            'title' => 'Dashboard Langganan',
+            'class' => 'text-white bg-gray-700'
+        ]);
+    }
+
+    public function show($id)
+    {
+        $user = Auth::user();
+        if (empty($user)) {
+            return redirect()->intended('/login');
+        }
+        if (!in_array($user->role, ['admin', 'super-admin'])) {
+            return redirect()->intended('/logout');
+        }
+        $data = Subscription::with('user', 'plan')->find($id);
+        return view('langganan.show', [
             'data' => $data,
             'title' => 'Dashboard Langganan',
             'class' => 'text-white bg-gray-700'
@@ -34,6 +51,7 @@ class LanggananController extends Controller
         $data = $request->validate([
             "plan_id" => ['required', 'numeric'],
             "payment_status" => ['required', 'in:paid,failed'],
+            "status" => ['nullable', 'in:pending,active,expired,cancelled'],
             "bukti_transfer" => ['nullable', 'image', 'mimes:png,jpg,jpeg'],
             "keterangan_admin" => ['required', 'string'],
         ]);
