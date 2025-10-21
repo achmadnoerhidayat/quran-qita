@@ -3,6 +3,7 @@
 use App\Http\Controllers\web\AyatController;
 use App\Http\Controllers\web\CourseController;
 use App\Http\Controllers\web\DashController;
+use App\Http\Controllers\web\DonasiController;
 use App\Http\Controllers\web\LanggananController;
 use App\Http\Controllers\web\LessonController;
 use App\Http\Controllers\web\LoginController;
@@ -112,4 +113,10 @@ Route::middleware('auth')->prefix('langganan')->group(function () {
     Route::get('/{id}', [LanggananController::class, 'show']);
     Route::put('/{id}', [LanggananController::class, 'update']);
     Route::post('/update-status/{id}', [LanggananController::class, 'updateStatus']);
+});
+
+Route::middleware('auth')->prefix('donasi')->group(function () {
+    Route::get('/', [DonasiController::class, 'index']);
+    Route::get('/{id}', [DonasiController::class, 'show']);
+    Route::put('/{id}', [DonasiController::class, 'update']);
 });

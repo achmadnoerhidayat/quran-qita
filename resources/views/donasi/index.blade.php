@@ -43,7 +43,7 @@
             <main class="p-4 md:p-8 flex-1">
                 <div class="flex justify-between">
                     <p class="font-bold">
-                        Langganan
+                        Donasi
                     </p>
                 </div>
 
@@ -53,19 +53,19 @@
                         <thead class="text-xs text-gray-700 uppercase bg-gray-100">
                             <tr>
                                 <th scope="col" class="px-6 py-3">
-                                    Mulai
+                                    Jumlah
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Berakhir
+                                    Metode Payment
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Nama Rekening
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    No Rekening
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Status Pembayaran
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Status
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Keterangan
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Aksi
@@ -76,62 +76,50 @@
                             @foreach ($data as $news)
                                 <tr class="bg-white border-b border-gray-200">
                                     <td class="px-6 py-4">
-                                        {{ !empty($news->starts_at) ? $news->starts_at->format('d M Y H:i') : '' }}
+                                        {{ number_format($news->jumlah_donasi, 0, ',', '.') }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ !empty($news->end_at) ? $news->end_at->format('d M Y H:i') : '' }}
+                                        {{ $news->metode_pembayaran }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        @if ($news->payment_status === 'paid')
-                                            <span
-                                                class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">{{ $news->payment_status }}</span>
-                                        @else
-                                            <span
-                                                class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">{{ $news->payment_status }}</span>
-                                        @endif
+                                        {{ $news->nama_rekening }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        @if ($news->status === 'expired')
+                                        {{ $news->nomer_rekening }}
+                                    </td>
+                                    <td class="px-6 py-4 flex">
+                                        @if ($news->status === 'Ditolak')
                                             <span
                                                 class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">{{ $news->status }}</span>
-                                        @elseif ($news->status === 'cancelled')
-                                            <span
-                                                class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">{{ $news->status }}</span>
-                                        @elseif ($news->status === 'active')
+                                        @elseif ($news->status === 'Dikonfirmasi')
                                             <span
                                                 class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">{{ $news->status }}</span>
-                                        @elseif ($news->status === 'pending')
+                                        @elseif ($news->status === 'Menunggu Konfirmasi')
                                             <span
                                                 class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">{{ $news->status }}</span>
                                         @endif
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $news->keterangan_admin }}
-                                    </td>
-                                    <td class="px-6 py-4">
                                         <div class="flex justify-content-center">
-                                            @if ($news->status === 'pending')
+                                            @if ($news->status === 'Menunggu Konfirmasi')
                                                 <a href="javascript:void(0)" class="text-[18px] mx-2 approve"
-                                                    title="Setujui" data-id="{{ $news->id }}"
-                                                    data-plan="{{ $news->plan->id }}">
+                                                    title="Setujui" data-id="{{ $news->id }}">
                                                     <i class="ri-check-fill"></i>
                                                 </a>
                                                 <a href="javascript:void(0)" class="text-[18px] mx-2 tolak"
-                                                    data-id="{{ $news->id }}" data-plan="{{ $news->plan->id }}"
-                                                    title="Tolak">
+                                                    data-id="{{ $news->id }}" title="Tolak">
                                                     <i class="ri-close-fill"></i>
                                                 </a>
                                             @endif
-                                            <a href="/langganan/{{ $news->id }}" class="text-[18px] mx-2"
-                                                title="Detail">
+                                            <a href="/donasi/{{ $news->id }}" class="text-[18px] mx-2" title="Detail">
                                                 <i class="ri-eye-2-line"></i>
                                             </a>
-                                            <a href="javascript:void(0)"
+                                            {{--  <a href="javascript:void(0)"
                                                 data-url="/langganan/update-status/{{ $news->id }}"
                                                 data-status="{{ $news->status }}" class="text-[18px] mx-2 edit-status"
                                                 title="Edit Status">
                                                 <i class="ri-pencil-line"></i>
-                                            </a>
+                                            </a>  --}}
                                         </div>
                                     </td>
                                 </tr>
@@ -175,12 +163,12 @@
                     showLoaderOnConfirm: true,
                     preConfirm: async (keterangan) => {
                         $.ajax({
-                            url: '/langganan/' + id,
+                            url: '/donasi/' + id,
                             method: 'POST',
                             data: {
                                 _method: 'PUT',
                                 plan_id: plan,
-                                payment_status: 'paid',
+                                status: 'Dikonfirmasi',
                                 keterangan_admin: keterangan
                             },
                             success: function(response) {
@@ -210,13 +198,11 @@
                     showLoaderOnConfirm: true,
                     preConfirm: async (keterangan) => {
                         $.ajax({
-                            url: '/langganan/' + id,
+                            url: '/donasi/' + id,
                             method: 'POST',
                             data: {
                                 _method: 'PUT',
-                                plan_id: plan,
-                                payment_status: 'failed',
-                                status: 'cancelled',
+                                status: 'Ditolak',
                                 keterangan_admin: keterangan
                             },
                             success: function(response) {
