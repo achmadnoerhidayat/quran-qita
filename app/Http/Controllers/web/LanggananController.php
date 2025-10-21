@@ -109,4 +109,35 @@ class LanggananController extends Controller
             ]);
         }
     }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $data = $request->validate([
+            "status" => ['required', 'in:pending,active,expired,cancelled'],
+        ]);
+        $user = Auth::user();
+        try {
+            DB::beginTransaction();
+            $subs = Subscription::where('id', $id);
+            if (!in_array($user->role, ['admin', 'super-admin'])) {
+                $subs = $subs->where('user_id', $user->id);
+            }
+            $subs = $subs->first();
+            if (!$subs) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'data subscription tidak ditemukan.'
+                ]);
+            }
+            $subs->update($data);
+            DB::commit();
+            return redirect()->intended('/langganan');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 }

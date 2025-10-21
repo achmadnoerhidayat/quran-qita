@@ -111,4 +111,5 @@ Route::middleware('auth')->prefix('langganan')->group(function () {
     Route::get('/', [LanggananController::class, 'index']);
     Route::get('/{id}', [LanggananController::class, 'show']);
     Route::put('/{id}', [LanggananController::class, 'update']);
+    Route::post('/update-status/{id}', [LanggananController::class, 'updateStatus']);
 });

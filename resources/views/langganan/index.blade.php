@@ -126,6 +126,12 @@
                                                 title="Detail">
                                                 <i class="ri-eye-2-line"></i>
                                             </a>
+                                            <a href="javascript:void(0)"
+                                                data-url="/langganan/update-status/{{ $news->id }}"
+                                                data-status="{{ $news->status }}" class="text-[18px] mx-2 edit-status"
+                                                title="Edit Status">
+                                                <i class="ri-pencil-line"></i>
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>
@@ -188,6 +194,7 @@
                     allowOutsideClick: () => !Swal.isLoading()
                 }).then((result) => {});
             });
+
             $(document).on('click', '.tolak', function() {
                 const id = $(this).data('id');
                 const plan = $(this).data('plan');
@@ -223,6 +230,32 @@
                     allowOutsideClick: () => !Swal.isLoading()
                 }).then((result) => {});
             });
+
+            $(document).on('click', '.edit-status', function() {
+                $(".content").html('');
+                const url = $(this).data('url');
+                const status = $(this).data('status');
+                let html = `<form action="${url}" method="post">
+                            <input type="hidden" name="_token" value="${$('meta[name="csrf-token"]').attr('content')}">
+                            <label for="role"
+                                class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Status</label>
+                            <select name="status" id="role"
+                                class="bg-gray-50 border border-gray-300 focus:border-primary-600 dark:border-gray-600 dark:focus:border-blue-500 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-white-100 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500">
+                                <option value="">Pilih Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="active">Active</option>
+                                <option value="expired">Expired</option>
+                                <option value="cancelled">cancelled</option>
+                            </select>
+                            <button type="submit"
+                    class="w-full my-2 border border-gray-300 text-black bg-white from-purple-600 to-blue-500 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 cursor-pointe">
+                    Simpan
+                </button>
+                        </form>`;
+                $(".content").append(html);
+                $('select[name="status"]').val(status);
+                $("#errorModal").removeClass('hidden');
+            })
 
             function showModal() {
                 document.getElementById('errorModal').classList.remove('hidden');
