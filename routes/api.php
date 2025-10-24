@@ -23,6 +23,7 @@ use App\Http\Controllers\api\ReminderController;
 use App\Http\Controllers\api\ScheduleController;
 use App\Http\Controllers\api\SubscriptionController;
 use App\Http\Controllers\api\SurahController;
+use App\Http\Controllers\api\TanyaUstadController;
 use App\Http\Controllers\api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -175,6 +176,13 @@ Route::middleware('auth:sanctum')->prefix('quiz')->group(function () {
 
 Route::middleware('auth:sanctum')->prefix('haji-umroh')->group(function () {
     Route::get('/', [HajiUmrohController::class, 'index']);
+});
+
+Route::middleware('auth:sanctum')->prefix('ask-ustad')->group(function () {
+    Route::get('/', [TanyaUstadController::class, 'index']);
+    Route::post('/', [TanyaUstadController::class, 'store']);
+    Route::put('/{id}', [TanyaUstadController::class, 'update']);
+    Route::delete('/{id}', [TanyaUstadController::class, 'delete']);
 });
 
 Route::middleware('auth:sanctum')->prefix('chat-ai')->group(function () {

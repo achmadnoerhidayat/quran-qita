@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\web\AskUstadzController;
 use App\Http\Controllers\web\AyatController;
 use App\Http\Controllers\web\CourseController;
 use App\Http\Controllers\web\DashController;
@@ -119,4 +120,9 @@ Route::middleware('auth')->prefix('donasi')->group(function () {
     Route::get('/', [DonasiController::class, 'index']);
     Route::get('/{id}', [DonasiController::class, 'show']);
     Route::put('/{id}', [DonasiController::class, 'update']);
+});
+
+Route::middleware('auth')->prefix('ask-uztadz')->group(function () {
+    Route::get('/', [AskUstadzController::class, 'index']);
+    Route::put('/{id}', [AskUstadzController::class, 'update']);
 });
