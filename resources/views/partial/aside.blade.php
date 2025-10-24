@@ -141,7 +141,7 @@
                 Donasi</span>
         </a>
 
-        <a href="/ask-ustadz" @class([
+        <a href="/ask-uztadz" @class([
             'flex items-center p-3 rounded-lg hover:bg-gray-800 hover:text-white font-medium transition duration-200 group relative',
             $class => $title === 'Dashboard Tanya Ustadz',
         ])>
