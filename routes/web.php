@@ -5,6 +5,7 @@ use App\Http\Controllers\web\AyatController;
 use App\Http\Controllers\web\CourseController;
 use App\Http\Controllers\web\DashController;
 use App\Http\Controllers\web\DonasiController;
+use App\Http\Controllers\web\DzikirController;
 use App\Http\Controllers\web\LanggananController;
 use App\Http\Controllers\web\LessonController;
 use App\Http\Controllers\web\LoginController;
@@ -125,4 +126,12 @@ Route::middleware('auth')->prefix('donasi')->group(function () {
 Route::middleware('auth')->prefix('ask-uztadz')->group(function () {
     Route::get('/', [AskUstadzController::class, 'index']);
     Route::put('/{id}', [AskUstadzController::class, 'update']);
+});
+
+Route::middleware('auth')->prefix('dzikir')->group(function () {
+    Route::get('/', [DzikirController::class, 'index']);
+    Route::get('/{id}', [DzikirController::class, 'show']);
+    Route::post('/', [DzikirController::class, 'store'])->name('store-dzikir');
+    Route::put('/{id}', [DzikirController::class, 'update'])->name('update-dzikir');
+    Route::delete('/{id}', [DzikirController::class, 'delete']);
 });

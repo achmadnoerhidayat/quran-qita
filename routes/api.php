@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\AiController;
+use App\Http\Controllers\api\AsmaController;
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\BookmarkController;
 use App\Http\Controllers\api\CommentController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\api\ComunityController;
 use App\Http\Controllers\api\CourseController;
 use App\Http\Controllers\api\DoaController;
 use App\Http\Controllers\api\DonasiController;
+use App\Http\Controllers\api\DzikirController;
 use App\Http\Controllers\api\ForumController;
 use App\Http\Controllers\api\HajiUmrohController;
 use App\Http\Controllers\api\HighlightController;
@@ -183,6 +185,14 @@ Route::middleware('auth:sanctum')->prefix('ask-ustad')->group(function () {
     Route::post('/', [TanyaUstadController::class, 'store']);
     Route::put('/{id}', [TanyaUstadController::class, 'update']);
     Route::delete('/{id}', [TanyaUstadController::class, 'delete']);
+});
+
+Route::middleware('auth:sanctum')->prefix('asma')->group(function () {
+    Route::get('/', [AsmaController::class, 'index']);
+});
+
+Route::middleware('auth:sanctum')->prefix('zikir')->group(function () {
+    Route::get('/', [DzikirController::class, 'index']);
 });
 
 Route::middleware('auth:sanctum')->prefix('chat-ai')->group(function () {
