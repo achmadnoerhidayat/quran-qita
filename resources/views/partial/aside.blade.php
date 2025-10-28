@@ -173,6 +173,22 @@
                 Dzikir</span>
         </a>
 
+        <a href="/asma" @class([
+            'flex items-center p-3 rounded-lg hover:bg-gray-800 hover:text-white font-medium transition duration-200 group relative',
+            $class => $title === 'Dashboard Asma Al Husna',
+        ])>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 flex-shrink-0" viewBox="0 0 24 24"
+                fill="currentColor">
+                <path
+                    d="M12.0006 18.26L4.94715 22.2082L6.52248 14.2799L0.587891 8.7918L8.61493 7.84006L12.0006 0.5L15.3862 7.84006L23.4132 8.7918L17.4787 14.2799L19.054 22.2082L12.0006 18.26Z">
+                </path>
+            </svg>
+            <span class="nav-text ml-3 whitespace-nowrap">Asma Al Husna</span>
+            <span
+                class="absolute left-full ml-3 px-3 py-1 bg-gray-700 text-xs rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 md:hidden sidebar-tooltip">Asma
+                AL Husna</span>
+        </a>
+
         <a href="/user" @class([
             'flex items-center p-3 rounded-lg hover:bg-gray-800 hover:text-white font-medium transition duration-200 group relative',
             $class => $title === 'Dashboard Pengguna',

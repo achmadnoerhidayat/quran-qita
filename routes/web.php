@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\web\AskUstadzController;
+use App\Http\Controllers\web\AsmaAlHusnaController;
 use App\Http\Controllers\web\AyatController;
 use App\Http\Controllers\web\CourseController;
 use App\Http\Controllers\web\DashController;
@@ -134,4 +135,12 @@ Route::middleware('auth')->prefix('dzikir')->group(function () {
     Route::post('/', [DzikirController::class, 'store'])->name('store-dzikir');
     Route::put('/{id}', [DzikirController::class, 'update'])->name('update-dzikir');
     Route::delete('/{id}', [DzikirController::class, 'delete']);
+});
+
+Route::middleware('auth')->prefix('asma')->group(function () {
+    Route::get('/', [AsmaAlHusnaController::class, 'index']);
+    Route::get('/{id}', [AsmaAlHusnaController::class, 'show']);
+    Route::post('/', [AsmaAlHusnaController::class, 'store'])->name('store-asma');
+    Route::put('/{id}', [AsmaAlHusnaController::class, 'update'])->name('update-asma');
+    Route::delete('/{id}', [AsmaAlHusnaController::class, 'delete']);
 });
