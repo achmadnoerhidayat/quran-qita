@@ -93,7 +93,7 @@
                                         {{ $news->type }}
                                     </td>
                                     <td class="px-6 py-4 ayat-arab">
-                                        {{ $news->arab }}
+                                        {!! $news->arab !!}
                                     </td>
                                     <td class="px-6 py-4">
                                         {!! $news->indo !!}
