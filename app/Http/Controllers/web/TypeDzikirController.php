@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
-use App\Models\Dzikir;
 use App\Models\TypeDzikir;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class DzikirController extends Controller
+class TypeDzikirController extends Controller
 {
     public function index(Request $request)
     {
@@ -21,11 +20,9 @@ class DzikirController extends Controller
         if (!in_array($user->role, ['admin', 'super-admin'])) {
             return redirect()->intended('/logout');
         }
-        $data = Dzikir::paginate($limit);
-        $type = TypeDzikir::all();
-        return view('dzikir.index', [
+        $data = TypeDzikir::paginate($limit);
+        return view('typeDzikir.index', [
             'data' => $data,
-            'type' => $type,
             'title' => 'Dashboard Dzikir',
             'class' => 'text-white bg-gray-700'
         ]);
@@ -40,16 +37,14 @@ class DzikirController extends Controller
         if (!in_array($user->role, ['admin', 'super-admin'])) {
             return redirect()->intended('/logout');
         }
-        $data = Dzikir::find($id);
+        $data = TypeDzikir::find($id);
         if (!$data) {
             return back()->withErrors([
-                'error' => 'data dzikir tidak ditemukan',
+                'error' => 'data type dzikir tidak ditemukan',
             ]);
         }
-        $type = TypeDzikir::all();
-        return view('dzikir.edit', [
+        return view('typeDzikir.edit', [
             'data' => $data,
-            'type' => $type,
             'title' => 'Dashboard Dzikir',
             'class' => 'text-white bg-gray-700'
         ]);
@@ -58,17 +53,14 @@ class DzikirController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'type' => ['required'],
-            'arab' => ['required'],
-            'indo' => ['required'],
-            'ulang' => ['required'],
+            'name' => ['required'],
         ]);
 
         try {
             DB::beginTransaction();
-            Dzikir::create($data);
+            TypeDzikir::create($data);
             DB::commit();
-            return redirect()->intended('/dzikir');
+            return redirect()->intended('/type-dzikir');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors([
@@ -80,23 +72,20 @@ class DzikirController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->validate([
-            'type' => ['required'],
-            'arab' => ['required'],
-            'indo' => ['required'],
-            'ulang' => ['required'],
+            'name' => ['required'],
         ]);
 
         try {
             DB::beginTransaction();
-            $dzikir = Dzikir::find($id);
+            $dzikir = TypeDzikir::find($id);
             if (!$dzikir) {
                 return back()->withErrors([
-                    'error' => 'data dzikir tidak ditemukan',
+                    'error' => 'data type dzikir tidak ditemukan',
                 ]);
             }
             $dzikir->update($data);
             DB::commit();
-            return redirect()->intended('/dzikir');
+            return redirect()->intended('/type-dzikir');
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors([
@@ -109,18 +98,18 @@ class DzikirController extends Controller
     {
         try {
             DB::beginTransaction();
-            $dzikir = Dzikir::find($id);
+            $dzikir = TypeDzikir::find($id);
             if (!$dzikir) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'data dzikir tidak ditemukan.'
+                    'message' => 'data type dzikir tidak ditemukan.'
                 ]);
             }
             $dzikir->delete();
             DB::commit();
             return response()->json([
                 'success' => true,
-                'message' => 'data dzikir berhasil dihapus.'
+                'message' => 'data type dzikir berhasil dihapus.'
             ]);
         } catch (\Exception $e) {
             DB::rollBack();

@@ -14,6 +14,7 @@ use App\Http\Controllers\web\NewsHajiUmrohhController;
 use App\Http\Controllers\web\PlanController;
 use App\Http\Controllers\web\QuizController;
 use App\Http\Controllers\web\QuranController;
+use App\Http\Controllers\web\TypeDzikirController;
 use App\Http\Controllers\web\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -143,4 +144,12 @@ Route::middleware('auth')->prefix('asma')->group(function () {
     Route::post('/', [AsmaAlHusnaController::class, 'store'])->name('store-asma');
     Route::put('/{id}', [AsmaAlHusnaController::class, 'update'])->name('update-asma');
     Route::delete('/{id}', [AsmaAlHusnaController::class, 'delete']);
+});
+
+Route::middleware('auth')->prefix('type-dzikir')->group(function () {
+    Route::get('/', [TypeDzikirController::class, 'index']);
+    Route::get('/{id}', [TypeDzikirController::class, 'show']);
+    Route::post('/', [TypeDzikirController::class, 'store'])->name('store-type-dzikir');
+    Route::put('/{id}', [TypeDzikirController::class, 'update'])->name('update-type-dzikir');
+    Route::delete('/{id}', [TypeDzikirController::class, 'delete']);
 });

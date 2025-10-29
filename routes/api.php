@@ -26,6 +26,7 @@ use App\Http\Controllers\api\ScheduleController;
 use App\Http\Controllers\api\SubscriptionController;
 use App\Http\Controllers\api\SurahController;
 use App\Http\Controllers\api\TanyaUstadController;
+use App\Http\Controllers\api\TypeDzikirController;
 use App\Http\Controllers\api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -193,6 +194,10 @@ Route::middleware('auth:sanctum')->prefix('asma')->group(function () {
 
 Route::middleware('auth:sanctum')->prefix('zikir')->group(function () {
     Route::get('/', [DzikirController::class, 'index']);
+});
+
+Route::middleware('auth:sanctum')->prefix('type-zikir')->group(function () {
+    Route::get('/', [TypeDzikirController::class, 'index']);
 });
 
 Route::middleware('auth:sanctum')->prefix('chat-ai')->group(function () {

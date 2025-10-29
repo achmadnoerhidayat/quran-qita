@@ -45,22 +45,23 @@
                     class="hidden text-sm font-medium text-center text-gray-500 rounded-lg shadow-sm sm:flex dark:divide-gray-700 dark:text-gray-400">
                     <li class="w-full focus-within:z-10">
                         <a href="/dzikir"
-                            class="inline-block w-full p-4 text-gray-900 bg-gray-100 border-r border-gray-200 dark:border-gray-700 rounded-s-lg focus:ring-4 focus:ring-blue-300 active focus:outline-none dark:bg-gray-700 dark:text-white"
+                            class="inline-block w-full p-4 bg-white border-r border-gray-200 dark:border-gray-700 rounded-s-lg hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
                             aria-current="page">Dzikir</a>
                     </li>
                     <li class="w-full focus-within:z-10">
                         <a href="/type-dzikir"
-                            class="inline-block w-full p-4 bg-white border-r border-gray-200 dark:border-gray-700 rounded-e-lg hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700">Type</a>
+                            class="inline-block w-full p-4 text-gray-900 bg-gray-100 border-r border-gray-200 dark:border-gray-700 rounded-e-lg focus:ring-4 focus:ring-blue-300 active focus:outline-none dark:bg-gray-700 dark:text-white">Type</a>
                     </li>
                 </ul>
 
+
                 <div class="flex justify-between mt-4">
                     <p class="font-bold">
-                        Dzikir
+                        Type
                     </p>
                     <button type="button" onclick="showModal()"
                         class="w-1/4 border border-gray-300 text-black bg-white from-purple-600 to-blue-500 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 cursor-pointe">
-                        Tambah Dzikir
+                        Tambah Type
                     </button>
                 </div>
 
@@ -73,15 +74,6 @@
                                     Type
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Arab
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Indo
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Ulang
-                                </th>
-                                <th scope="col" class="px-6 py-3">
                                     Aksi
                                 </th>
                             </tr>
@@ -90,20 +82,11 @@
                             @foreach ($data as $news)
                                 <tr class="bg-white border-b border-gray-200">
                                     <td class="px-6 py-4">
-                                        {{ $news->type }}
-                                    </td>
-                                    <td class="px-6 py-4 ayat-arab">
-                                        {{ $news->arab }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        {{ $news->indo }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        {{ $news->ulang }}
+                                        {{ $news->name }}
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex justify-content-center">
-                                            <a href="/dzikir/{{ $news->id }}" class="text-[18px] mx-2">
+                                            <a href="/type-dzikir/{{ $news->id }}" class="text-[18px] mx-2">
                                                 <i class="ri-edit-fill"></i>
                                             </a>
                                             <a href="javascript:void(0)" class="text-[18px] mx-2 delete-zikir"
@@ -126,47 +109,15 @@
         </div>
 
         <x-modal>
-            <h2 class="text-lg font-bold mb-4 text-red-600">Tambah Dzikir</h2>
-            <form class="space-y-4 md:space-y-6 mt-3" method="POST" action="{{ route('store-dzikir') }}">
+            <h2 class="text-lg font-bold mb-4 text-red-600">Tambah Type Dzikir</h2>
+            <form class="space-y-4 md:space-y-6 mt-3" method="POST" action="{{ route('store-type-dzikir') }}">
                 @csrf
                 <div>
-                    <label for="role" class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Type</label>
-                    <select name="type" id="role"
-                        class="bg-gray-50 border border-gray-300 focus:border-primary-600 dark:border-gray-600 dark:focus:border-blue-500 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-white-100 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500">
-                        <option value="">Pilih Type</option>
-                        @foreach ($type as $dzikir)
-                            <option value="{{ $dzikir->name }}">{{ $dzikir->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('type')
-                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-                <div>
-                    <label for="arab" class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Arab</label>
-                    <input type="text" name="arab" id="arab"
-                        class="bg-gray-50 border @error('arab') border-red-500 @else border-gray-300 focus:border-primary-600 dark:border-gray-600 dark:focus:border-blue-500 @enderror text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-white-100 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500"
-                        value="{{ old('arab') }}" placeholder="Masukan arab ...." />
-                    @error('arab')
-                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-                <div>
-                    <label for="indo" class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Indo</label>
-                    <input type="text" name="indo" id="indo"
-                        class="bg-gray-50 border @error('indo') border-red-500 @else border-gray-300 focus:border-primary-600 dark:border-gray-600 dark:focus:border-blue-500 @enderror text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-white-100 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500"
-                        value="{{ old('indo') }}" placeholder="Masukan Teks Indo ...." />
-                    @error('indo')
-                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-                <div>
-                    <label for="ulang"
-                        class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Ulang</label>
-                    <input type="text" name="ulang" id="ulang"
-                        class="bg-gray-50 border @error('ulang') border-red-500 @else border-gray-300 focus:border-primary-600 dark:border-gray-600 dark:focus:border-blue-500 @enderror text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-white-100 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500"
-                        value="{{ old('ulang') }}" placeholder="Masukan Ulang 1x ...." />
-                    @error('ulang')
+                    <label for="name" class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Name</label>
+                    <input type="text" name="name" id="name"
+                        class="bg-gray-50 border @error('name') border-red-500 @else border-gray-300 focus:border-primary-600 dark:border-gray-600 dark:focus:border-blue-500 @enderror text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-white-100 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500"
+                        value="{{ old('name') }}" placeholder="Masukan name ...." />
+                    @error('name')
                         <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
@@ -192,8 +143,8 @@
             $(document).on('click', '.delete-zikir', function() {
                 const id = $(this).data('id');
                 Swal.fire({
-                    title: 'Yakin hapus Dzikir?',
-                    text: 'Menghapus Dzikir akan menghapus semua data Dzikir yang terkait secara permanen.Anda tidak dapat membatalkan tindakan ini.',
+                    title: 'Yakin hapus Type Dzikir?',
+                    text: 'Menghapus Type Dzikir akan menghapus semua data Type Dzikir yang terkait secara permanen.Anda tidak dapat membatalkan tindakan ini.',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -203,7 +154,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: '/dzikir/' + id,
+                            url: '/type-dzikir/' + id,
                             method: 'POST',
                             data: {
                                 _method: 'DELETE',
