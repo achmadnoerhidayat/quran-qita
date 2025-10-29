@@ -52,7 +52,8 @@
                             class="bg-gray-50 border border-gray-300 focus:border-primary-600 dark:border-gray-600 dark:focus:border-blue-500 text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-white-100 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500">
                             <option value="">Pilih Type</option>
                             @foreach ($type as $dzikir)
-                                <option value="pagi" {{ ($data->type ?? '') == $dzikir->name ? 'selected' : '' }}>
+                                <option value="{{ $dzikir->name }}"
+                                    {{ ($data->type ?? '') == $dzikir->name ? 'selected' : '' }}>
                                     {{ $dzikir->name }}</option>
                             @endforeach
                         </select>
