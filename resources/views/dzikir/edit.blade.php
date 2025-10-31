@@ -42,7 +42,8 @@
 
             <main class="p-4 md:p-8 flex-1">
                 <h2 class="text-lg font-bold mb-4 text-red-600">Edit Dzikir</h2>
-                <form class="space-y-4 md:space-y-6 mt-3" method="POST" action="{{ route('update-dzikir', $data->id) }}">
+                <form class="space-y-4 md:space-y-6 mt-3" method="POST" enctype="multipart/form-data"
+                    action="{{ route('update-dzikir', $data->id) }}">
                     @csrf
                     @method('PUT')
                     <div>
@@ -91,6 +92,24 @@
                             <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                         @enderror
                     </div>
+                    @if ($data->url_audio)
+                        <div>
+                            <media-theme-tailwind-audio style="width:100%">
+                                <video slot="media" src="/storage/{{ $data->url_audio }}" playsinline
+                                    crossorigin="anonymous"></video>
+                            </media-theme-tailwind-audio>
+                        </div>
+                    @endif
+                    <div>
+                        <label for="audio" class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Upload
+                            Audio</label>
+                        <input type="file" accept="audio/mp3" name="audio" id="audio"
+                            class="bg-gray-50 border @error('audio') border-red-500 @else border-gray-300 focus:border-primary-600 dark:border-gray-600 dark:focus:border-blue-500 @enderror text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-white-100 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500"
+                            placeholder="Masukan audio ...." />
+                        @error('audio')
+                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
                     <button type="submit"
                         class="w-full border border-gray-300 text-black bg-white from-purple-600 to-blue-500 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 cursor-pointe">
                         Simpan
@@ -100,6 +119,7 @@
         </div>
 
         @include('partial.script')
+        <script type="module" src="https://cdn.jsdelivr.net/npm/player.style/tailwind-audio/+esm"></script>
         @if ($errors->any())
             <script>
                 document.getElementById('errorModal').classList.remove('hidden');

@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Dzikir extends Model
 {
-    protected $fillable = ['type', 'arab', 'indo', 'ulang'];
+    protected $fillable = ['type', 'arab', 'indo', 'url_audio', 'ulang'];
 }

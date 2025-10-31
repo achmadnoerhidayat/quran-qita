@@ -8,6 +8,7 @@ use App\Models\TypeDzikir;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class DzikirController extends Controller
 {
@@ -62,10 +63,22 @@ class DzikirController extends Controller
             'arab' => ['required'],
             'indo' => ['required'],
             'ulang' => ['required'],
+            'audio' => [
+                'required',
+                'file',
+                'mimes:mp3,mpeg,mpga',
+                'max:10240'
+            ]
         ]);
 
         try {
+            $url = null;
             DB::beginTransaction();
+            if ($request->hasFile('audio')) {
+                $photo = $request->file('audio');
+                $url = $photo->store('asset/dzikir', 'public');
+            }
+            $data['url_audio'] = $url;
             Dzikir::create($data);
             DB::commit();
             return redirect()->intended('/dzikir');
@@ -84,6 +97,12 @@ class DzikirController extends Controller
             'arab' => ['required'],
             'indo' => ['required'],
             'ulang' => ['required'],
+            'audio' => [
+                'nullable',
+                'file',
+                'mimes:mp3,mpeg,mpga',
+                'max:10240'
+            ]
         ]);
 
         try {
@@ -94,6 +113,12 @@ class DzikirController extends Controller
                     'error' => 'data dzikir tidak ditemukan',
                 ]);
             }
+            $url = $dzikir->url_audio;
+            if ($request->hasFile('audio')) {
+                $photo = $request->file('audio');
+                $url = $photo->store('asset/dzikir', 'public');
+            }
+            $data['url_audio'] = $url;
             $dzikir->update($data);
             DB::commit();
             return redirect()->intended('/dzikir');
@@ -115,6 +140,9 @@ class DzikirController extends Controller
                     'success' => false,
                     'message' => 'data dzikir tidak ditemukan.'
                 ]);
+            }
+            if ($dzikir->url_audio) {
+                Storage::disk('public')->delete($dzikir->url_audio);
             }
             $dzikir->delete();
             DB::commit();
