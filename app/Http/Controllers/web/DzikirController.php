@@ -115,6 +115,7 @@ class DzikirController extends Controller
             }
             $url = $dzikir->url_audio;
             if ($request->hasFile('audio')) {
+                Storage::disk('public')->delete($dzikir->url_audio);
                 $photo = $request->file('audio');
                 $url = $photo->store('asset/dzikir', 'public');
             }
