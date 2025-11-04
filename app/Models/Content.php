@@ -10,6 +10,11 @@ class Content extends Model
 
     protected $hidden = ['user_id'];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function file()
     {
         return $this->hasMany(FileContent::class, 'content_id');

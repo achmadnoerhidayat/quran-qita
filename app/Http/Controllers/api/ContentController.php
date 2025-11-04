@@ -17,7 +17,7 @@ class ContentController extends Controller
         $id = $request->input('id');
         $limit = $request->input('limit', 25);
         $status = $request->input('status', 'approved');
-        $content = Content::with('file', 'comments.likes', 'likes')->where('status', $status);
+        $content = Content::with('file', 'user', 'comments.likes', 'likes')->where('status', $status);
 
         if ($id) {
             $content = $content->where('id', $id)->first();
