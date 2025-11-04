@@ -3,6 +3,7 @@
 use App\Http\Controllers\web\AskUstadzController;
 use App\Http\Controllers\web\AsmaAlHusnaController;
 use App\Http\Controllers\web\AyatController;
+use App\Http\Controllers\web\ContentController;
 use App\Http\Controllers\web\CourseController;
 use App\Http\Controllers\web\DashController;
 use App\Http\Controllers\web\DonasiController;
@@ -152,4 +153,10 @@ Route::middleware('auth')->prefix('type-dzikir')->group(function () {
     Route::post('/', [TypeDzikirController::class, 'store'])->name('store-type-dzikir');
     Route::put('/{id}', [TypeDzikirController::class, 'update'])->name('update-type-dzikir');
     Route::delete('/{id}', [TypeDzikirController::class, 'delete']);
+});
+
+Route::middleware('auth')->prefix('konten')->group(function () {
+    Route::get('/', [ContentController::class, 'index']);
+    Route::put('/{id}', [ContentController::class, 'update']);
+    Route::delete('/{id}', [ContentController::class, 'delete']);
 });

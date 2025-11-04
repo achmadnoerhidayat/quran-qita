@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ResponseFormated;
 use App\Models\Comment;
+use App\Models\Content;
 use App\Models\Forum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,15 +15,24 @@ class CommentController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'forum_id' => ['required', 'numeric'],
+            'forum_id' => ['nullable', 'numeric'],
+            'content_id' => ['nullable', 'numeric'],
             'body' => ['required', 'string']
         ]);
         $user = $request->user();
         try {
             DB::beginTransaction();
-            $forum = Forum::where('id', $data['forum_id'])->first();
-            if (!$forum) {
-                return ResponseFormated::error(null, 'data forum tidak ditemukan', 404);
+            if (isset($data['forum_id'])) {
+                $forum = Forum::where('id', $data['forum_id'])->first();
+                if (!$forum) {
+                    return ResponseFormated::error(null, 'data forum tidak ditemukan', 404);
+                }
+            }
+            if (isset($data['content_id'])) {
+                $forum = Content::where('id', $data['content_id'])->first();
+                if (!$forum) {
+                    return ResponseFormated::error(null, 'data content tidak ditemukan', 404);
+                }
             }
             $data['user_id'] = $user->id;
             $comment = Comment::create($data);
@@ -37,15 +47,24 @@ class CommentController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->validate([
-            'forum_id' => ['required', 'numeric'],
+            'forum_id' => ['nullable', 'numeric'],
+            'content_id' => ['nullable', 'numeric'],
             'body' => ['required', 'string']
         ]);
         $user = $request->user();
         try {
             DB::beginTransaction();
-            $forum = Forum::where('id', $data['forum_id'])->first();
-            if (!$forum) {
-                return ResponseFormated::error(null, 'data forum tidak ditemukan', 404);
+            if (isset($data['forum_id'])) {
+                $forum = Forum::where('id', $data['forum_id'])->first();
+                if (!$forum) {
+                    return ResponseFormated::error(null, 'data forum tidak ditemukan', 404);
+                }
+            }
+            if (isset($data['content_id'])) {
+                $forum = Content::where('id', $data['content_id'])->first();
+                if (!$forum) {
+                    return ResponseFormated::error(null, 'data content tidak ditemukan', 404);
+                }
             }
             $data['user_id'] = $user->id;
             $comment = Comment::where('id', $id)->where('user_id', $user->id)->first();
@@ -89,7 +108,7 @@ class CommentController extends Controller
         try {
             $comment = Comment::where('id', $data['comment_id'])->first();
             if (!$comment) {
-                return ResponseFormated::error(null, 'data forum tidak ditemukan', 404);
+                return ResponseFormated::error(null, 'data comment tidak ditemukan', 404);
             }
             if ($comment->user_id === $user->id) {
                 return ResponseFormated::error(null, 'Anda tidak bisa menyukai comment yang Anda buat sendiri.', 403);

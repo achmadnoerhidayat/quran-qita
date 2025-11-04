@@ -6,6 +6,7 @@ use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\BookmarkController;
 use App\Http\Controllers\api\CommentController;
 use App\Http\Controllers\api\ComunityController;
+use App\Http\Controllers\api\ContentController;
 use App\Http\Controllers\api\CourseController;
 use App\Http\Controllers\api\DoaController;
 use App\Http\Controllers\api\DonasiController;
@@ -198,6 +199,11 @@ Route::middleware('auth:sanctum')->prefix('zikir')->group(function () {
 
 Route::middleware('auth:sanctum')->prefix('type-zikir')->group(function () {
     Route::get('/', [TypeDzikirController::class, 'index']);
+});
+
+Route::middleware('auth:sanctum')->prefix('content')->group(function () {
+    Route::get('/', [ContentController::class, 'index']);
+    Route::post('/', [ContentController::class, 'store']);
 });
 
 Route::middleware('auth:sanctum')->prefix('chat-ai')->group(function () {
