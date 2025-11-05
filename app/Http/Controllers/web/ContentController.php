@@ -21,7 +21,7 @@ class ContentController extends Controller
         if (!in_array($user->role, ['admin', 'super-admin'])) {
             return redirect()->intended('/logout');
         }
-        $data = Content::with('file', 'comments.likes', 'likes')->paginate($limit);
+        $data = Content::with('file', 'comments.likes', 'likes')->orderBy('created_at', 'desc')->paginate($limit);
         return view('content.index', [
             'data' => $data,
             'title' => 'Dashboard Konten',

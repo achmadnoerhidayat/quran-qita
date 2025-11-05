@@ -27,7 +27,7 @@ class ContentController extends Controller
             return ResponseFormated::success($content, 'data content berhasil ditampilkan');
         }
 
-        $content = $content->paginate($limit);
+        $content = $content->orderBy('created_at', 'desc')->paginate($limit);
 
         return ResponseFormated::success($content, 'data content berhasil ditampilkan');
     }
