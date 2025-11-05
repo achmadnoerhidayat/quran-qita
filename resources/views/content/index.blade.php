@@ -90,10 +90,11 @@
                             </div>
                             <a href="#" class="mt-4">
                                 @if ($quran->content_type === 'image')
-                                    <img class="rounded-t-lg" src="/storage/{{ $quran->file[0]->url }}" alt="" />
+                                    <img class="rounded-t-lg h-[450px]" src="/storage/{{ $quran->file[0]->url }}"
+                                        alt="" />
                                 @else
                                     <video
-                                        class="w-full h-auto max-w-full border border-gray-200 rounded-lg dark:border-gray-700"
+                                        class="w-full h-[450px] max-w-full border border-gray-200 rounded-lg dark:border-gray-700"
                                         controls>
                                         <source src="/storage/{{ $quran->file[0]->url }}" type="video/mp4">
                                         Your browser does not support the video tag.
