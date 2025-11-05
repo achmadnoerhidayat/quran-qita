@@ -204,6 +204,7 @@ Route::middleware('auth:sanctum')->prefix('type-zikir')->group(function () {
 Route::middleware('auth:sanctum')->prefix('content')->group(function () {
     Route::get('/', [ContentController::class, 'index']);
     Route::post('/', [ContentController::class, 'store']);
+    Route::post('/like', [ContentController::class, 'like']);
 });
 
 Route::middleware('auth:sanctum')->prefix('chat-ai')->group(function () {

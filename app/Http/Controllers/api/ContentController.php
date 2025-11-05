@@ -17,7 +17,7 @@ class ContentController extends Controller
         $id = $request->input('id');
         $limit = $request->input('limit', 25);
         $status = $request->input('status', 'approved');
-        $content = Content::with('file', 'user', 'comments.likes', 'likes')->where('status', $status);
+        $content = Content::with('file', 'user', 'comments.likes.user', 'likes.user')->where('status', $status);
 
         if ($id) {
             $content = $content->where('id', $id)->first();
@@ -95,6 +95,35 @@ class ContentController extends Controller
                 }
             }
             return ResponseFormated::error(null, $e->getMessage(), 403);
+        }
+    }
+
+    public function like(Request $request)
+    {
+        $data = $request->validate([
+            'content_id' => ['required', 'numeric']
+        ]);
+        $user = $request->user();
+        try {
+            $forum = Content::where('id', $data['content_id'])->first();
+            if (!$forum) {
+                return ResponseFormated::error(null, 'data konten tidak ditemukan', 404);
+            }
+            if ($forum->user_id === $user->id) {
+                return ResponseFormated::error(null, 'Anda tidak bisa menyukai konten yang Anda buat sendiri.', 403);
+            }
+            $existingLike = $forum->likes()->where('user_id', $user->id)->first();
+            if ($existingLike) {
+                // Jika sudah ada like, hapus (unlike)
+                $existingLike->delete();
+                return ResponseFormated::success(null, 'Unlike berhasil!');
+            } else {
+                // Jika belum, buat like baru
+                $forum->likes()->create(['user_id' => $user->id]);
+                return ResponseFormated::success(null, 'Like berhasil!');
+            }
+        } catch (\Exception $e) {
+            //throw $th;
         }
     }
 }

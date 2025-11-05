@@ -15,6 +15,7 @@ use App\Http\Controllers\web\NewsHajiUmrohhController;
 use App\Http\Controllers\web\PlanController;
 use App\Http\Controllers\web\QuizController;
 use App\Http\Controllers\web\QuranController;
+use App\Http\Controllers\web\ShareController;
 use App\Http\Controllers\web\TypeDzikirController;
 use App\Http\Controllers\web\UserController;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +35,8 @@ Route::get('/privacy', function () {
 Route::get('/about', function () {
     return view('about');
 });
+Route::get('/share', [ShareController::class, 'index']);
+
 Route::group(['prefix' => '/'], function () {
     Route::get('login', [LoginController::class, 'index']);
     Route::post('login', [LoginController::class, 'login'])->name('login');
