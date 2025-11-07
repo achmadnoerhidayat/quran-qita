@@ -17,6 +17,7 @@ class CommentController extends Controller
         $data = $request->validate([
             'forum_id' => ['nullable', 'numeric'],
             'content_id' => ['nullable', 'numeric'],
+            'parent_comment_id' => ['nullable', 'numeric'],
             'body' => ['required', 'string']
         ]);
         $user = $request->user();

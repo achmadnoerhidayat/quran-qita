@@ -11,6 +11,7 @@ use App\Http\Controllers\api\CourseController;
 use App\Http\Controllers\api\DoaController;
 use App\Http\Controllers\api\DonasiController;
 use App\Http\Controllers\api\DzikirController;
+use App\Http\Controllers\api\FollowController;
 use App\Http\Controllers\api\ForumController;
 use App\Http\Controllers\api\HajiUmrohController;
 use App\Http\Controllers\api\HighlightController;
@@ -204,7 +205,15 @@ Route::middleware('auth:sanctum')->prefix('type-zikir')->group(function () {
 Route::middleware('auth:sanctum')->prefix('content')->group(function () {
     Route::get('/', [ContentController::class, 'index']);
     Route::post('/', [ContentController::class, 'store']);
+    Route::post('/view', [ContentController::class, 'view']);
     Route::post('/like', [ContentController::class, 'like']);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/follow/{user}', [FollowController::class, 'follow']);
+    Route::delete('/unfollow/{user}', [FollowController::class, 'unfollow']);
+    Route::get('/followers/{user}', [FollowController::class, 'followers']);
+    Route::get('/following/{user}', [FollowController::class, 'following']);
 });
 
 Route::middleware('auth:sanctum')->prefix('chat-ai')->group(function () {

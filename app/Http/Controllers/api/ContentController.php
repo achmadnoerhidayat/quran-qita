@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ResponseFormated;
 use App\Models\Content;
+use App\Models\ViewContent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -17,7 +18,11 @@ class ContentController extends Controller
         $id = $request->input('id');
         $limit = $request->input('limit', 25);
         $status = $request->input('status', 'approved');
-        $content = Content::with('file', 'user', 'comments.user', 'comments.likes.user', 'likes.user')->where('status', $status);
+        $content = Content::with(['file', 'view.user', 'user', 'comments' => function ($e) {
+            $e->whereNull('parent_comment_id')->orderBy('created_at', 'desc');
+        }, 'comments.user', 'comments.replies' => function ($l) {
+            $l->orderBy('created_at', 'desc');
+        }, 'comments.replies.user', 'comments.replies.likes', 'comments.likes.user', 'likes.user'])->where('status', $status);
 
         if ($id) {
             $content = $content->where('id', $id)->first();
@@ -26,10 +31,33 @@ class ContentController extends Controller
             }
             return ResponseFormated::success($content, 'data content berhasil ditampilkan');
         }
-
         $content = $content->orderBy('created_at', 'desc')->paginate($limit);
 
         return ResponseFormated::success($content, 'data content berhasil ditampilkan');
+    }
+
+    public function view(Request $request)
+    {
+        $data = $request->validate([
+            'content_id' => ['required', 'numeric']
+        ]);
+        try {
+            DB::beginTransaction();
+            $content = Content::find($data['content_id']);
+            if (!$content) {
+                return ResponseFormated::error(null, 'data konten tidak ditemukan', 404);
+            }
+            $view = ViewContent::where('user_id', $request->user()->id)->where('content_id', $data['content_id'])->first();
+            if (!$view) {
+                $data['user_id'] = $request->user()->id;
+                ViewContent::create($data);
+            }
+            DB::commit();
+            return ResponseFormated::success(null, 'berhasil melihat konten');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return ResponseFormated::error(null, $e->getMessage(), 403);
+        }
     }
 
     public function store(Request $request)

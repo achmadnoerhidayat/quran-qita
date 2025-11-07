@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('comments', function (Blueprint $table) {
             $table->foreignId('content_id')->after('forum_id')->nullable();
+            $table->foreignId('parent_comment_id')->after('content_id')->nullable();
         });
     }
 
@@ -23,6 +24,7 @@ return new class extends Migration
     {
         Schema::table('comments', function (Blueprint $table) {
             $table->dropColumn('content_id');
+            $table->dropColumn('parent_comment_id');
         });
     }
 };

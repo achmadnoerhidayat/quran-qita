@@ -20,6 +20,11 @@ class Content extends Model
         return $this->hasMany(FileContent::class, 'content_id');
     }
 
+    public function view()
+    {
+        return $this->hasMany(ViewContent::class, 'content_id');
+    }
+
     public function comments()
     {
         return $this->hasMany(Comment::class, 'content_id');

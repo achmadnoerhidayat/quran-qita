@@ -18,19 +18,21 @@ class ForumController extends Controller
         $title = $request->input('title');
         $comunity_id = $request->input('comunity_id');
         $limit = $request->input('limit', 25);
+        $forum = Forum::with(['comunity', 'user', 'likes.user', 'comments' => function ($e) {
+            $e->whereNull('parent_comment_id')->orderBy('created_at', 'desc');
+        }, 'comments.user', 'comments.likes.user']);
         if ($id) {
-            $forum = Forum::with('comunity', 'user', 'likes.user', 'comments.user', 'comments.likes.user')->where('id', $id)->first();
+            $forum = $forum->where('id', $id)->first();
             if (!$forum) {
                 return ResponseFormated::error(null, 'data forum post tidak ditemukan', 404);
             }
             return ResponseFormated::success($forum, 'data forum post berhasil ditambahkan');
         }
-        $forum = Forum::with('comunity', 'user', 'likes.user', 'comments.user', 'comments.likes.user');
         if ($title) {
-            $forum->where('title', 'like', '%' . $title . '%');
+            $forum = $forum->where('title', 'like', '%' . $title . '%');
         }
         if ($comunity_id) {
-            $forum->where('comunity_id', $comunity_id);
+            $forum = $forum->where('comunity_id', $comunity_id);
         }
         $forum = $forum->paginate($limit);
         return ResponseFormated::success($forum, 'data forum post berhasil ditambahkan');
