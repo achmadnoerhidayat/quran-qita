@@ -1,8 +1,29 @@
 @extends('partial.index')
 
 @push('head')
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <style>
+        /* Perbaiki posisi tombol */
+        .owl-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            /* kiri-kanan */
+            transform: translateY(-50%);
+            pointer-events: none;
+            /* biar tombol bisa klik */
+        }
+
+        .owl-nav button {
+            pointer-events: auto;
+            /* aktifkan klik tombol */
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -133,29 +154,20 @@
 
                             </div>
 
-                            <div class="carousel w-full relative" id="quranCarousel">
-                                @foreach ($quran->file as $key => $item)
-                                    <div class="carousel-item relative w-full" data-index="{{ $key }}">
+                            <div class="owl-carousel owl-theme min-h-[350px] quranCarousel relative">
+                                @foreach ($quran->file as $item)
+                                    <div class="item">
                                         @if ($quran->content_type === 'image')
-                                            <img class="w-full rounded-t-lg h-[350px] object-cover"
-                                                src="/storage/{{ $item->url }}" alt="Slide {{ $key + 1 }}" />
+                                            <img src="{{ asset('storage/' . $item->url) }}" alt=""
+                                                class="w-full h-[350px] object-cover rounded-t-lg">
                                         @else
-                                            <video
-                                                class="w-full h-[350px] max-w-full border border-gray-200 rounded-lg dark:border-gray-700 object-cover"
-                                                controls>
-                                                <source src="/storage/{{ $item->url }}" type="video/mp4">
+                                            <video controls class="w-full h-[350px] object-cover rounded-t-lg">
+                                                <source src="{{ asset('storage/' . $item->url) }}" type="video/mp4">
                                                 Your browser does not support the video tag.
                                             </video>
                                         @endif
                                     </div>
                                 @endforeach
-
-                                <!-- Navigasi manual -->
-                                <div
-                                    class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-                                    <button id="prevBtn" class="btn btn-circle">❮</button>
-                                    <button id="nextBtn" class="btn btn-circle">❯</button>
-                                </div>
                             </div>
 
                         </div>
@@ -177,43 +189,23 @@
         @endif
 
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const carousel = document.getElementById('quranCarousel');
-                const slides = carousel.querySelectorAll('.carousel-item');
-                const prevBtn = document.getElementById('prevBtn');
-                const nextBtn = document.getElementById('nextBtn');
+            $(window).on('load', function() {
+                $('.quranCarousel').each(function() {
+                    const $carousel = $(this);
 
-                let current = 0;
-                const total = slides.length;
-                const intervalTime = 4000; // 4 detik
-                let autoSlide;
-
-                function showSlide(index) {
-                    slides.forEach((slide, i) => {
-                        slide.classList.toggle('hidden', i !== index);
+                    $carousel.owlCarousel({
+                        items: 1,
+                        loop: false, // ⬅️ nonaktifkan loop
+                        nav: true, // ⬅️ aktifkan tombol navigasi
+                        dots: false,
+                        margin: 10,
+                        autoHeight: true,
+                        autoplay: false, // ⬅️ jangan autoplay
+                        navText: ['<button class="btn btn-circle">❮</button>',
+                            '<button class="btn btn-circle">❯</button>'
+                        ] // tombol custom
                     });
-                }
-
-                function nextSlide() {
-                    current = (current + 1) % total;
-                    showSlide(current);
-                }
-
-                function prevSlide() {
-                    current = (current - 1 + total) % total;
-                    showSlide(current);
-                }
-
-                nextBtn.addEventListener('click', nextSlide);
-                prevBtn.addEventListener('click', prevSlide);
-
-                // Pause saat hover
-                carousel.addEventListener('mouseenter', stopAutoSlide);
-                carousel.addEventListener('mouseleave', startAutoSlide);
-
-                // Inisialisasi
-                showSlide(current);
-                startAutoSlide();
+                });
             });
 
             $.ajaxSetup({
