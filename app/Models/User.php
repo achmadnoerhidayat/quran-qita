@@ -27,6 +27,7 @@ class User extends Authenticatable
         'device_id',
         'lat',
         'long',
+        'image',
     ];
 
     /**
@@ -75,7 +76,7 @@ class User extends Authenticatable
         return $this->hasMany(Follow::class, 'following_id');
     }
 
-    public function following()
+    public function followings()
     {
         return $this->hasMany(Follow::class, 'follower_id');
     }

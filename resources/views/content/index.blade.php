@@ -1,5 +1,10 @@
 @extends('partial.index')
 
+@push('head')
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+@endpush
+
 @section('content')
 
     <body class="bg-gray-50 flex h-screen overflow-hidden">
@@ -46,12 +51,51 @@
                         Content
                     </p>
                 </div>
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-4 my-2">
+                <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-4 gap-4 my-2">
                     @foreach ($data as $index => $quran)
                         <div
                             class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
 
-                            <div class="flex justify-end px-4 pt-4 relative">
+                            <div class="flex justify-between px-4 pt-4 relative">
+                                @if ($quran->status === 'pending')
+                                    <span
+                                        class="inline-flex items-center justify-center w-6 h-6 me-2 text-sm font-semibold text-white-800 bg-yellow-100 rounded-full dark:bg-yellow-700 dark:text-white-300"
+                                        title="{{ $quran->status }}">
+                                        <svg class="w-2.5 h-2.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                            fill="currentColor">
+                                            <path
+                                                d="M12 6C12.8284 6 13.5 5.32843 13.5 4.5C13.5 3.67157 12.8284 3 12 3C11.1716 3 10.5 3.67157 10.5 4.5C10.5 5.32843 11.1716 6 12 6ZM9 10H11V18H9V20H15V18H13V8H9V10Z">
+                                            </path>
+                                        </svg>
+                                        <span class="sr-only">Icon description</span>
+                                    </span>
+                                @elseif ($quran->status === 'approved')
+                                    <span
+                                        class="inline-flex items-center justify-center w-6 h-6 me-2 text-sm font-semibold text-gray-800 bg-green-100 rounded-full dark:bg-green-700 dark:text-gray-300"
+                                        title="{{ $quran->status }}">
+
+                                        <svg class="w-2.5 h-2.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                            fill="currentColor">
+                                            <path
+                                                d="M9.9997 15.1709L19.1921 5.97852L20.6063 7.39273L9.9997 17.9993L3.63574 11.6354L5.04996 10.2212L9.9997 15.1709Z">
+                                            </path>
+                                        </svg>
+                                        <span class="sr-only">Icon description</span>
+                                    </span>
+                                @else
+                                    <span
+                                        class="inline-flex items-center justify-center w-6 h-6 me-2 text-sm font-semibold text-gray-800 bg-red-100 rounded-full dark:bg-red-700 dark:text-gray-300"
+                                        title="{{ $quran->status }}">
+
+                                        <svg class="w-2.5 h-2.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                            fill="currentColor">
+                                            <path
+                                                d="M11.9997 10.5865L16.9495 5.63672L18.3637 7.05093L13.4139 12.0007L18.3637 16.9504L16.9495 18.3646L11.9997 13.4149L7.04996 18.3646L5.63574 16.9504L10.5855 12.0007L5.63574 7.05093L7.04996 5.63672L11.9997 10.5865Z">
+                                            </path>
+                                        </svg>
+                                        <span class="sr-only">Icon description</span>
+                                    </span>
+                                @endif
                                 <button class="dropdown-toggle" data-index="{{ $index }}" type="button">
                                     <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg"
                                         fill="currentColor" viewBox="0 0 16 3">
@@ -88,19 +132,32 @@
                                 </p>
 
                             </div>
-                            <a href="#" class="mt-4">
-                                @if ($quran->content_type === 'image')
-                                    <img class="rounded-t-lg h-[450px]" src="/storage/{{ $quran->file[0]->url }}"
-                                        alt="" />
-                                @else
-                                    <video
-                                        class="w-full h-[450px] max-w-full border border-gray-200 rounded-lg dark:border-gray-700"
-                                        controls>
-                                        <source src="/storage/{{ $quran->file[0]->url }}" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>
-                                @endif
-                            </a>
+
+                            <div class="carousel w-full relative" id="quranCarousel">
+                                @foreach ($quran->file as $key => $item)
+                                    <div class="carousel-item relative w-full" data-index="{{ $key }}">
+                                        @if ($quran->content_type === 'image')
+                                            <img class="w-full rounded-t-lg h-[350px] object-cover"
+                                                src="/storage/{{ $item->url }}" alt="Slide {{ $key + 1 }}" />
+                                        @else
+                                            <video
+                                                class="w-full h-[350px] max-w-full border border-gray-200 rounded-lg dark:border-gray-700 object-cover"
+                                                controls>
+                                                <source src="/storage/{{ $item->url }}" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        @endif
+                                    </div>
+                                @endforeach
+
+                                <!-- Navigasi manual -->
+                                <div
+                                    class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                                    <button id="prevBtn" class="btn btn-circle">❮</button>
+                                    <button id="nextBtn" class="btn btn-circle">❯</button>
+                                </div>
+                            </div>
+
                         </div>
                     @endforeach
                 </div>
@@ -120,6 +177,45 @@
         @endif
 
         <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const carousel = document.getElementById('quranCarousel');
+                const slides = carousel.querySelectorAll('.carousel-item');
+                const prevBtn = document.getElementById('prevBtn');
+                const nextBtn = document.getElementById('nextBtn');
+
+                let current = 0;
+                const total = slides.length;
+                const intervalTime = 4000; // 4 detik
+                let autoSlide;
+
+                function showSlide(index) {
+                    slides.forEach((slide, i) => {
+                        slide.classList.toggle('hidden', i !== index);
+                    });
+                }
+
+                function nextSlide() {
+                    current = (current + 1) % total;
+                    showSlide(current);
+                }
+
+                function prevSlide() {
+                    current = (current - 1 + total) % total;
+                    showSlide(current);
+                }
+
+                nextBtn.addEventListener('click', nextSlide);
+                prevBtn.addEventListener('click', prevSlide);
+
+                // Pause saat hover
+                carousel.addEventListener('mouseenter', stopAutoSlide);
+                carousel.addEventListener('mouseleave', startAutoSlide);
+
+                // Inisialisasi
+                showSlide(current);
+                startAutoSlide();
+            });
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

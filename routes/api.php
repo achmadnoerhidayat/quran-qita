@@ -54,6 +54,7 @@ Route::middleware('auth:sanctum')->prefix('user')->group(function () {
     Route::get('/', [UserController::class, 'index']);
     Route::post('/', [UserController::class, 'store']);
     Route::post('/generate-token', [UserController::class, 'updateFcmToken']);
+    Route::post('/upload', [UserController::class, 'upload']);
     Route::put('/{id}', [UserController::class, 'update']);
     Route::delete('/{id}', [UserController::class, 'delete']);
 });
@@ -205,6 +206,7 @@ Route::middleware('auth:sanctum')->prefix('type-zikir')->group(function () {
 Route::middleware('auth:sanctum')->prefix('content')->group(function () {
     Route::get('/', [ContentController::class, 'index']);
     Route::post('/', [ContentController::class, 'store']);
+    Route::put('/{id}', [ContentController::class, 'update']);
     Route::post('/view', [ContentController::class, 'view']);
     Route::post('/like', [ContentController::class, 'like']);
 });

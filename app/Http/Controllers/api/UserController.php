@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
@@ -20,21 +21,21 @@ class UserController extends Controller
         $limit = $request->input('limit', 25);
         $user = $request->user();
         if (!in_array($user->role, ['admin', 'super-admin'])) {
-            $users = User::where('id', $user->id)->first();
+            $users = User::with('followers.follower', 'followings.following')->where('id', $user->id)->first();
             if (!$users) {
                 return ResponseFormated::error(null, 'data user tidak ditemukan', 404);
             }
             return ResponseFormated::success($users, 'data user berhasil ditampilkan');
         }
         if ($id) {
-            $users = User::where('id', $id)->first();
+            $users = User::with('followers.follower', 'followings.following')->where('id', $id)->first();
             if (!$users) {
                 return ResponseFormated::error(null, 'data user tidak ditemukan', 404);
             }
             return ResponseFormated::success($users, 'data user berhasil ditambahkan');
         }
 
-        $users = User::select('id', 'name', 'email', 'role');
+        $users = User::with('followers.follower', 'followings.following');
         if ($name) {
             $users = $users->where('name', 'like', '%' . $name . '%');
         }
@@ -160,5 +161,26 @@ class UserController extends Controller
             'device_id' => $data['device_id']
         ]);
         return ResponseFormated::success(null, 'data device token berhasil ditambahkan');
+    }
+
+    public function upload(Request $request)
+    {
+        $request->validate([
+            'image' => ['required', 'image', 'mimes:png,jpg,jpeg']
+        ]);
+        $user = $request->user();
+        $url = null;
+        if ($request->hasFile('image')) {
+            $photo = $request->file('image');
+            $url = $photo->store('asset/user', 'public');
+        }
+        if ($user->image) {
+            Storage::disk('public')->delete($user->image);
+        }
+        $user->update([
+            'image' => $url
+        ]);
+
+        return ResponseFormated::success(null, 'berhasil upload profile');
     }
 }
