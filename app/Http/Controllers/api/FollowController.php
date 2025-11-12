@@ -64,7 +64,7 @@ class FollowController extends Controller
 
     public function following(User $user)
     {
-        $following = $user->following()->with('following:id,name,email,role,lat,long')->get()
+        $following = $user->followings()->with('following:id,name,email,role,lat,long')->get()
             ->pluck('following');
 
         return ResponseFormated::success($following, 'data following berhasil ditampilkan');
