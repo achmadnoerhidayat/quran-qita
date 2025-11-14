@@ -64,6 +64,7 @@
                             <thead>
                                 <tr>
                                     <th></th>
+                                    <th>Type</th>
                                     <th>Jumlah Koin</th>
                                     <th>Nilai Rupiah</th>
                                     <th>Active</th>
@@ -76,6 +77,9 @@
                                         <th>
                                             {{ $key + 1 }}
                                         </th>
+                                        <td>
+                                            {{ $rate->type }}
+                                        </td>
                                         <td>
                                             {{ $rate->coin_unit }}
                                         </td>
