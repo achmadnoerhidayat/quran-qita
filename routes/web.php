@@ -3,6 +3,8 @@
 use App\Http\Controllers\web\AskUstadzController;
 use App\Http\Controllers\web\AsmaAlHusnaController;
 use App\Http\Controllers\web\AyatController;
+use App\Http\Controllers\web\CoinPackageController;
+use App\Http\Controllers\web\CoinRateController;
 use App\Http\Controllers\web\ContentController;
 use App\Http\Controllers\web\CourseController;
 use App\Http\Controllers\web\DashController;
@@ -162,4 +164,20 @@ Route::middleware('auth')->prefix('konten')->group(function () {
     Route::get('/', [ContentController::class, 'index']);
     Route::put('/{id}', [ContentController::class, 'update']);
     Route::delete('/{id}', [ContentController::class, 'delete']);
+});
+
+Route::middleware('auth')->prefix('paket')->group(function () {
+    Route::get('/', [CoinPackageController::class, 'index']);
+    Route::get('/{id}', [CoinPackageController::class, 'edit']);
+    Route::post('/', [CoinPackageController::class, 'store'])->name('store-paket');
+    Route::put('/{id}', [CoinPackageController::class, 'update'])->name('update-paket');
+    Route::delete('/{id}', [CoinPackageController::class, 'delete']);
+});
+
+Route::middleware('auth')->prefix('rate')->group(function () {
+    Route::get('/', [CoinRateController::class, 'index']);
+    Route::get('/{id}', [CoinRateController::class, 'edit']);
+    Route::post('/', [CoinRateController::class, 'store'])->name('store-rate');
+    Route::put('/{id}', [CoinRateController::class, 'update'])->name('update-rate');
+    Route::delete('/{id}', [CoinRateController::class, 'delete'])->name('delete-rate');
 });

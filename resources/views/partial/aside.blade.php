@@ -188,6 +188,37 @@
                 Konten</span>
         </a>
 
+        <div class="relative group menu-group">
+            <button id="dashboard-toggle" @class([
+                'menu-toggle flex items-center w-full p-3 rounded-lg text-gray-400 font-semibold transition duration-200 hover:bg-gray-800 focus:outline-none',
+                $class => $title === 'Dashboard Koin',
+            ]) data-target="submenu-setting">
+                <span class="flex items-center flex-1 justify-start">
+                    <svg class="w-6 h-6 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="currentColor">
+                        <path
+                            d="M23.0049 12.0028V14.0028C23.0049 17.3165 18.08 20.0028 12.0049 20.0028C6.03824 20.0028 1.18114 17.4116 1.00957 14.1797L1.00488 14.0028V12.0028C1.00488 15.3165 5.92975 18.0028 12.0049 18.0028C18.08 18.0028 23.0049 15.3165 23.0049 12.0028ZM12.0049 4.00281C18.08 4.00281 23.0049 6.6891 23.0049 10.0028C23.0049 13.3165 18.08 16.0028 12.0049 16.0028C5.92975 16.0028 1.00488 13.3165 1.00488 10.0028C1.00488 6.6891 5.92975 4.00281 12.0049 4.00281Z">
+                        </path>
+                    </svg>
+                    <span class="nav-text ml-3 whitespace-nowrap">Koin</span>
+                </span>
+                <svg class="menu-arrow w-5 h-5 transition-transform duration-300 transform nav-arrow" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+                <span
+                    class="absolute left-full ml-3 px-3 py-1 bg-gray-700 text-xs rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 md:hidden sidebar-tooltip">Koin</span>
+            </button>
+
+            <div id="submenu-setting" class="submenu-container mt-1" style="max-height: 0px;">
+                <a href="/paket"
+                    class="block py-2 pl-12 text-gray-400 hover:bg-gray-800 hover:text-white transition duration-200 rounded-lg">Paket</a>
+                <a href="/rate"
+                    class="block py-2 pl-12 text-gray-400 hover:bg-gray-800 hover:text-white transition duration-200 rounded-lg">Nilai
+                    Tukar</a>
+            </div>
+        </div>
+
         <a href="/dzikir" @class([
             'flex items-center p-3 rounded-lg hover:bg-gray-800 hover:text-white font-medium transition duration-200 group relative',
             $class => $title === 'Dashboard Dzikir',

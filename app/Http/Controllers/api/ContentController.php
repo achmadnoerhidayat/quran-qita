@@ -24,7 +24,7 @@ class ContentController extends Controller
             $e->whereNull('parent_comment_id')->orderBy('created_at', 'desc');
         }, 'comments.user', 'comments.replies' => function ($l) {
             $l->orderBy('created_at', 'desc');
-        }, 'comments.replies.user', 'comments.replies.likes', 'comments.likes.user', 'likes.user']);
+        }, 'comments.replies.user', 'comments.replies.likes', 'comments.replies.likes.user', 'comments.likes.user', 'likes.user']);
 
         if ($id) {
             $content = $content->where('id', $id)->where('status', $status)->first();
