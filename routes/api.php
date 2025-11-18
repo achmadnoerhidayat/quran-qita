@@ -46,6 +46,9 @@ Route::get('masjid', [MasjidController::class, 'index']);
 
 Route::get('berita-islami', [MasjidController::class, 'beritaIslami']);
 
+// callback topup koin
+Route::post('coin/callback', [CoinController::class, 'callback']);
+
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('register', [AuthController::class, 'register']);
@@ -230,7 +233,6 @@ Route::middleware('auth:sanctum')->prefix('paket')->group(function () {
 Route::middleware('auth:sanctum')->prefix('coin')->group(function () {
     Route::get('/purchase', [CoinController::class, 'purchase']);
     Route::post('/topup', [CoinController::class, 'topup']);
-    Route::post('/callback', [CoinController::class, 'callback']);
     Route::post('/status-payment', [CoinController::class, 'cekTransaksi']);
     Route::post('/payment-methode', [CoinController::class, 'paymentMethode']);
 });
