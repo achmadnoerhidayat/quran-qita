@@ -139,6 +139,9 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="mt-2">
+                    {{ $data->links() }}
+                </div>
                 <x-modal>
                     <div class="content">
 

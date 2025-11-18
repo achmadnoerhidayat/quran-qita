@@ -4,6 +4,8 @@ use App\Http\Controllers\api\AiController;
 use App\Http\Controllers\api\AsmaController;
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\BookmarkController;
+use App\Http\Controllers\api\CoinController;
+use App\Http\Controllers\api\CoinPackageController;
 use App\Http\Controllers\api\CommentController;
 use App\Http\Controllers\api\ComunityController;
 use App\Http\Controllers\api\ContentController;
@@ -216,6 +218,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/unfollow/{user}', [FollowController::class, 'unfollow']);
     Route::get('/followers/{user}', [FollowController::class, 'followers']);
     Route::get('/following/{user}', [FollowController::class, 'following']);
+});
+
+Route::middleware('auth:sanctum')->prefix('paket')->group(function () {
+    Route::get('/', [CoinPackageController::class, 'index']);
+    Route::post('/', [CoinPackageController::class, 'store']);
+    Route::put('/{id}', [CoinPackageController::class, 'update']);
+    Route::delete('/{id}', [CoinPackageController::class, 'delete']);
+});
+
+Route::middleware('auth:sanctum')->prefix('coin')->group(function () {
+    Route::get('/purchase', [CoinController::class, 'purchase']);
+    Route::post('/topup', [CoinController::class, 'topup']);
+    Route::post('/callback', [CoinController::class, 'callback']);
+    Route::post('/status-payment', [CoinController::class, 'cekTransaksi']);
+    Route::post('/payment-methode', [CoinController::class, 'paymentMethode']);
 });
 
 Route::middleware('auth:sanctum')->prefix('chat-ai')->group(function () {

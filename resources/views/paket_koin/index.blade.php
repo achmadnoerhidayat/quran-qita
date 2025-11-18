@@ -94,9 +94,9 @@
                             <div class="p-5">
                                 <p class="mb-3 font-normal text-5xl text-center">
                                     <i class="ri-coin-line" style="color: #fbbf24 !important;"></i><span
-                                        class="text-white">{{ $quran->coin_amount }}</span>
+                                        class="text-black dark:text-white">{{ $quran->coin_amount }}</span>
                                 </p>
-                                <p class="mb-3 font-normal text-2xl text-white text-center">
+                                <p class="mb-3 font-normal text-2xl text-black dark:text-white text-center">
                                     Rp {{ number_format($quran->price, 0, ',', '.') }}
                                 </p>
 

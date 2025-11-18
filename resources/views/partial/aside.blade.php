@@ -189,10 +189,10 @@
         </a>
 
         <div class="relative group menu-group">
-            <button id="dashboard-toggle" @class([
-                'menu-toggle flex items-center w-full p-3 rounded-lg text-gray-400 font-semibold transition duration-200 hover:bg-gray-800 focus:outline-none',
+            <button @class([
+                'menu-toggle flex items-center w-full p-3 rounded-lg text-white font-semibold transition duration-200 hover:bg-gray-800 focus:outline-none',
                 $class => $title === 'Dashboard Koin',
-            ]) data-target="submenu-setting">
+            ]) data-target="submenu-koin">
                 <span class="flex items-center flex-1 justify-start">
                     <svg class="w-6 h-6 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                         fill="currentColor">
@@ -202,15 +202,16 @@
                     </svg>
                     <span class="nav-text ml-3 whitespace-nowrap">Koin</span>
                 </span>
-                <svg class="menu-arrow w-5 h-5 transition-transform duration-300 transform nav-arrow" fill="none"
+                <svg id="dashboard-arrow"
+                    class="menu-arrow w-5 h-5 transition-transform duration-300 transform nav-arrow" fill="none"
                     stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
                 <span
-                    class="absolute left-full ml-3 px-3 py-1 bg-gray-700 text-xs rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 md:hidden sidebar-tooltip">Koin</span>
+                    class="absolute left-full ml-3 px-3 py-1 bg-gray-700 text-xs rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 md:hidden sidebar-tooltip">Belajar</span>
             </button>
 
-            <div id="submenu-setting" class="submenu-container mt-1" style="max-height: 0px;">
+            <div id="submenu-koin" class="submenu-container mt-1" style="max-height: 0px;">
                 <a href="/paket"
                     class="block py-2 pl-12 text-gray-400 hover:bg-gray-800 hover:text-white transition duration-200 rounded-lg">Paket</a>
                 <a href="/rate"

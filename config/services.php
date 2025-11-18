@@ -39,4 +39,10 @@ return [
         'key' => env('GOOGLE_MAPS_API_KEY')
     ],
 
+    'duitku' => [
+        'merchant_code' => env('DUITKU_MERCHANT_CODE'),
+        'api_key'       => env('DUITKU_API_KEY'),
+        'sandbox'       => env('DUITKU_SANDBOX', true), // true untuk sandbox, false untuk live
+    ]
+
 ];
