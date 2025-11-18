@@ -16,6 +16,39 @@ use Illuminate\Support\Str;
 
 class CoinController extends Controller
 {
+    public function index(Request $request)
+    {
+        $id = $request->input('id');
+        $limit = $request->input('limit', 25);
+        $user = $request->user();
+        $wallet = UserWallet::with('user');
+        if (!in_array($user->role, ['admin', 'super-admin'])) {
+            $wallet = $wallet->where('user_id', $user->id)->first();
+            if (!$wallet) {
+                return ResponseFormated::error(null, 'data user coin tidak ditemukan', 404);
+            }
+            $purchase = CoinPurchase::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+            $history = CoinTransaction::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+            $wallet['purchase'] = $purchase;
+            $wallet['history'] = $history;
+            return ResponseFormated::success($wallet, 'data user coin berhasil ditampilkan');
+        }
+        if ($id) {
+            $wallet = $wallet->where('id', $id)->first();
+            if (!$wallet) {
+                return ResponseFormated::error(null, 'data user coin tidak ditemukan', 404);
+            }
+            $purchase = CoinPurchase::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+            $history = CoinTransaction::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+            $wallet['purchase'] = $purchase;
+            $wallet['history'] = $history;
+            return ResponseFormated::success($wallet, 'data user coin berhasil ditampilkan');
+        }
+
+        $wallet = $wallet->orderBy('created_at', 'desc')->paginate($limit);
+        return ResponseFormated::success($wallet, 'data user coin berhasil ditampilkan');
+    }
+
     public function purchase(Request $request)
     {
         $id = $request->input('id');
@@ -92,7 +125,7 @@ class CoinController extends Controller
                 'information' => $payment['information'],
                 'price' => $paket->price,
             ]);
-
+            $result['order_id'] = $orderId;
             DB::commit();
             return ResponseFormated::success($result, 'topup coin berhasil ditambahkan');
         } catch (\Exception $e) {

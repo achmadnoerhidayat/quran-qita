@@ -14,7 +14,7 @@ class LessonController extends Controller
     public function index(Request $request)
     {
         $order = $request->input('order_by', 'desc');
-        $limit = $request->input('limit', 25);
+        $limit = $request->input('limit', 20);
         $user = Auth::user();
         if (empty($user)) {
             return redirect()->intended('/login');

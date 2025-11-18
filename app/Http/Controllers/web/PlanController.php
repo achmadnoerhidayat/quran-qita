@@ -11,8 +11,9 @@ use Illuminate\Support\Facades\DB;
 
 class PlanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $limit = $request->input('limit', 20);
         $user = Auth::user();
         if (empty($user)) {
             return redirect()->intended('/login');
@@ -20,7 +21,7 @@ class PlanController extends Controller
         if (!in_array($user->role, ['admin', 'super-admin'])) {
             return redirect()->intended('/logout');
         }
-        $data = Plan::orderBy('created_at', 'desc')->paginate(25);
+        $data = Plan::orderBy('created_at', 'desc')->paginate($limit);
         return view('plan.index', [
             'data' => $data,
             'title' => 'Dashboard Plan',
