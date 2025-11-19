@@ -23,9 +23,6 @@ return new class extends Migration
             $table->bigInteger('end_balance')->default(0);
             $table->enum('type', ['topup', 'gift', 'withdraw', 'system'])->default('system');
             $table->timestamps();
-
-            $table->unique('user_id');
-            $table->unique('purchase_id');
         });
     }
 

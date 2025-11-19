@@ -231,6 +231,7 @@ Route::middleware('auth:sanctum')->prefix('paket')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->prefix('coin')->group(function () {
+    Route::get('/', [CoinController::class, 'index']);
     Route::get('/purchase', [CoinController::class, 'purchase']);
     Route::post('/topup', [CoinController::class, 'topup']);
     Route::post('/status-payment', [CoinController::class, 'cekTransaksi']);

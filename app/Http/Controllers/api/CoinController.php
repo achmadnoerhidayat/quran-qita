@@ -156,10 +156,10 @@ class CoinController extends Controller
             $duitku = new DuitkuService();
             $callback = $duitku->callback();
 
-            Log::info('Duitku Callback', $callback);
+            // Log::info('Duitku Callback', $callback);
 
             // ---- Handle Status ----
-            $coin = CoinPurchase::where('order_id', $callback['merchantOrderId'])->first();
+            $coin = CoinPurchase::where('order_id', $callback['merchantOrderId'])->where('status', 'pending')->first();
             if (!$coin) {
                 return ResponseFormated::error(null, 'topup coin tidak ditemukan', 404);
             }
@@ -175,6 +175,7 @@ class CoinController extends Controller
                     // tambah coin transaksi
                     CoinTransaction::create([
                         'user_id' => $coin->user_id,
+                        'type' => 'topup',
                         'purchase_id' => $coin->id,
                         'end_balance' => $coin->amount_coin,
                         'amount_coin' => $coin->amount_coin,
@@ -187,6 +188,7 @@ class CoinController extends Controller
 
                     CoinTransaction::create([
                         'user_id' => $coin->user_id,
+                        'type' => 'topup',
                         'purchase_id' => $coin->id,
                         'start_balance' => $wallet->coins,
                         'end_balance' => $amount,

@@ -30,9 +30,6 @@ return new class extends Migration
             $table->string('qr_string')->nullable();
             $table->enum('status', ['pending', 'success', 'failed'])->default('pending');
             $table->timestamps();
-
-            $table->unique('user_id');
-            $table->unique('package_id');
         });
     }
 
