@@ -27,7 +27,7 @@ class CoinController extends Controller
             if (!$wallet) {
                 return ResponseFormated::error(null, 'data user coin tidak ditemukan', 404);
             }
-            $purchase = CoinPurchase::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+            $purchase = CoinPurchase::with('package')->where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
             $history = CoinTransaction::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
             $wallet['purchase'] = $purchase;
             $wallet['history'] = $history;
