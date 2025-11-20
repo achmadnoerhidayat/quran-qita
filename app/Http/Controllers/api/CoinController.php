@@ -120,6 +120,7 @@ class CoinController extends Controller
                 'payment_reference' => $result['reference'],
                 'va_number' => isset($result['vaNumber']) ? $result['vaNumber'] : null,
                 'qr_string' => isset($result['qrString']) ? $result['qrString'] : null,
+                'payment_url' => isset($result['paymentUrl']) ? $result['paymentUrl'] : null,
                 'payment_method' => $data['payment_method'],
                 'payment_type' => $payment['payment_type'],
                 'information' => $payment['information'],
@@ -146,7 +147,9 @@ class CoinController extends Controller
         }
         $duitku = new DuitkuService();
         $status = $duitku->checkStatus($data['order_id']);
-        return ResponseFormated::success(json_decode($status, true), 'data status transaksi berhasil ditampilkan');
+        $response = json_decode($status, true);
+        $response['payment_url'] = $purchase->payment_url;
+        return ResponseFormated::success($response, 'data status transaksi berhasil ditampilkan');
     }
 
     public function callback(Request $request)
