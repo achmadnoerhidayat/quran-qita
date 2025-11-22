@@ -50,11 +50,13 @@
                 </li>
                 <li class="mb-2">
                     Tim Pengembang
-                    <p>QuranQitaPro dikembangkan oleh Nawaitu Digital, perusahaan EdTech Muslim Indonesia yang fokus pada:</p>
+                    <p>QuranQitaPro dikembangkan oleh Nawaitu Digital, perusahaan EdTech Muslim Indonesia yang fokus
+                        pada:</p>
                     <ul class="list-disc ml-5">
                         <li>Inovasi Islami – menggabungkan nilai-nilai Islam dengan teknologi modern.</li>
                         <li>Kualitas & Keamanan – menjaga privasi data pengguna dengan standar tinggi.</li>
-                        <li>Komitmen Ummah – menghadirkan solusi digital untuk pendidikan, ibadah, dan komunitas Muslim di era modern.</li>
+                        <li>Komitmen Ummah – menghadirkan solusi digital untuk pendidikan, ibadah, dan komunitas Muslim
+                            di era modern.</li>
                     </ul>
                 </li>
                 <li class="mb-2">
@@ -62,7 +64,8 @@
                     <ul class="list-disc ml-5">
                         <li>Ulama & Konsultan Syariah → menjaga keotentikan isi Al-Qur’an & tafsir.</li>
                         <li>Developer & Designer → memastikan pengalaman pengguna ramah, indah, dan mudah.</li>
-                        <li>AI & Data Engineer → mengembangkan fitur pintar seperti AI Tadabbur, rekomendasi ibadah, dan gamifikasi amal.</li>
+                        <li>AI & Data Engineer → mengembangkan fitur pintar seperti AI Tadabbur, rekomendasi ibadah, dan
+                            gamifikasi amal.</li>
                         <li>Tim Support → membantu pengguna melalui email & layanan pelanggan.</li>
                     </ul>
                 </li>
@@ -104,6 +107,7 @@
                     <ul>
                         <li>Website: <a href="https://quranqita.pro" target="__blank">https://quranqita.pro</a></li>
                         <li>Email: <a href="mailto:support@quranqita.pro">support@quranqita.pro</a></li>
+                        <li>Phone: 0821-1932-8343</li>
                         <li>Media Sosial: (akan ditambahkan sesuai channel resmi)</li>
                     </ul>
                 </li>

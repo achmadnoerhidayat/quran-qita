@@ -220,6 +220,37 @@
             </div>
         </div>
 
+        <div class="relative group menu-group">
+            <button @class([
+                'menu-toggle flex items-center w-full p-3 rounded-lg text-white font-semibold transition duration-200 hover:bg-gray-800 focus:outline-none',
+                $class => $title === 'Dashboard Produk',
+            ]) data-target="submenu-produk">
+                <span class="flex items-center flex-1 justify-start">
+                    <svg class="w-6 h-6 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="currentColor">
+                        <path
+                            d="M20.0049 22H4.00488C3.4526 22 3.00488 21.5523 3.00488 21V3C3.00488 2.44772 3.4526 2 4.00488 2H20.0049C20.5572 2 21.0049 2.44772 21.0049 3V21C21.0049 21.5523 20.5572 22 20.0049 22ZM9.00488 6H7.00488V8C7.00488 10.7614 9.24346 13 12.0049 13C14.7663 13 17.0049 10.7614 17.0049 8V6H15.0049V8C15.0049 9.65685 13.6617 11 12.0049 11C10.348 11 9.00488 9.65685 9.00488 8V6Z">
+                        </path>
+                    </svg>
+                    <span class="nav-text ml-3 whitespace-nowrap">Produk</span>
+                </span>
+                <svg id="dashboard-arrow"
+                    class="menu-arrow w-5 h-5 transition-transform duration-300 transform nav-arrow" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+                <span
+                    class="absolute left-full ml-3 px-3 py-1 bg-gray-700 text-xs rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 md:hidden sidebar-tooltip">Belajar</span>
+            </button>
+
+            <div id="submenu-produk" class="submenu-container mt-1" style="max-height: 0px;">
+                <a href="/paket"
+                    class="block py-2 pl-12 text-gray-400 hover:bg-gray-800 hover:text-white transition duration-200 rounded-lg">Kategori</a>
+                <a href="/rate"
+                    class="block py-2 pl-12 text-gray-400 hover:bg-gray-800 hover:text-white transition duration-200 rounded-lg">Produk</a>
+            </div>
+        </div>
+
         <a href="/dzikir" @class([
             'flex items-center p-3 rounded-lg hover:bg-gray-800 hover:text-white font-medium transition duration-200 group relative',
             $class => $title === 'Dashboard Dzikir',
