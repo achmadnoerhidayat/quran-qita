@@ -79,11 +79,13 @@
                                         {{ $news->title }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        <div class="avatar">
-                                            <div class="w-24 rounded-xl">
-                                                <img src="/storage/{{ $news->icon }}" />
+                                        @if ($news->icon)
+                                            <div class="avatar">
+                                                <div class="w-24 rounded-xl">
+                                                    <img src="/storage/{{ $news->icon }}" />
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endif
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex justify-content-center">
