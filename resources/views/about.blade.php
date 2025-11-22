@@ -107,7 +107,8 @@
                     <ul>
                         <li>Website: <a href="https://quranqita.pro" target="__blank">https://quranqita.pro</a></li>
                         <li>Email: <a href="mailto:support@quranqita.pro">support@quranqita.pro</a></li>
-                        <li>Phone: 0821-1932-8343</li>
+                        <li>Alamat : Jln. Sarimadu 15, Bandung</li>
+                        <li>Phone: 08561098098</li>
                         <li>Media Sosial: (akan ditambahkan sesuai channel resmi)</li>
                     </ul>
                 </li>

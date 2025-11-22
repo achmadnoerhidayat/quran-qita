@@ -3,6 +3,7 @@
 use App\Http\Controllers\web\AskUstadzController;
 use App\Http\Controllers\web\AsmaAlHusnaController;
 use App\Http\Controllers\web\AyatController;
+use App\Http\Controllers\web\CategoryController;
 use App\Http\Controllers\web\CoinPackageController;
 use App\Http\Controllers\web\CoinRateController;
 use App\Http\Controllers\web\ContentController;
@@ -180,4 +181,12 @@ Route::middleware('auth')->prefix('rate')->group(function () {
     Route::post('/', [CoinRateController::class, 'store'])->name('store-rate');
     Route::put('/{id}', [CoinRateController::class, 'update'])->name('update-rate');
     Route::delete('/{id}', [CoinRateController::class, 'delete'])->name('delete-rate');
+});
+
+Route::middleware('auth')->prefix('kategori')->group(function () {
+    Route::get('/', [CategoryController::class, 'index']);
+    Route::get('/{id}', [CategoryController::class, 'edit']);
+    Route::post('/', [CategoryController::class, 'store'])->name('store-kategori');
+    Route::put('/{id}', [CategoryController::class, 'update'])->name('update-kategori');
+    Route::delete('/{id}', [CategoryController::class, 'delete'])->name('delete-rate');
 });

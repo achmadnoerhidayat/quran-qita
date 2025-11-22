@@ -244,9 +244,9 @@
             </button>
 
             <div id="submenu-produk" class="submenu-container mt-1" style="max-height: 0px;">
-                <a href="/paket"
+                <a href="/kategori"
                     class="block py-2 pl-12 text-gray-400 hover:bg-gray-800 hover:text-white transition duration-200 rounded-lg">Kategori</a>
-                <a href="/rate"
+                <a href="/produk"
                     class="block py-2 pl-12 text-gray-400 hover:bg-gray-800 hover:text-white transition duration-200 rounded-lg">Produk</a>
             </div>
         </div>
