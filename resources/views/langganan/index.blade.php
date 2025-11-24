@@ -53,22 +53,25 @@
                         <thead class="text-xs text-gray-700 uppercase bg-gray-100">
                             <tr>
                                 <th scope="col" class="px-6 py-3">
+                                    Nama
+                                </th>
+                                <th scope="col" class="px-6 py-3">
                                     Mulai
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Berakhir
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Status Pembayaran
+                                    Order Id
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Harga
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Metode Pembayaran
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Status
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Keterangan
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Aksi
                                 </th>
                             </tr>
                         </thead>
@@ -76,19 +79,22 @@
                             @foreach ($data as $news)
                                 <tr class="bg-white border-b border-gray-200">
                                     <td class="px-6 py-4">
+                                        {{ $news->user->name }}
+                                    </td>
+                                    <td class="px-6 py-4">
                                         {{ !empty($news->starts_at) ? $news->starts_at->format('d M Y H:i') : '' }}
                                     </td>
                                     <td class="px-6 py-4">
                                         {{ !empty($news->end_at) ? $news->end_at->format('d M Y H:i') : '' }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        @if ($news->payment_status === 'paid')
-                                            <span
-                                                class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">{{ $news->payment_status }}</span>
-                                        @else
-                                            <span
-                                                class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">{{ $news->payment_status }}</span>
-                                        @endif
+                                        {{ $news->order_id }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ $news->price }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ $news->information . ' ' . $news->va_number }}
                                     </td>
                                     <td class="px-6 py-4">
                                         @if ($news->status === 'expired')
@@ -104,35 +110,6 @@
                                             <span
                                                 class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">{{ $news->status }}</span>
                                         @endif
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        {{ $news->keterangan_admin }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <div class="flex justify-content-center">
-                                            @if ($news->status === 'pending')
-                                                <a href="javascript:void(0)" class="text-[18px] mx-2 approve"
-                                                    title="Setujui" data-id="{{ $news->id }}"
-                                                    data-plan="{{ $news->plan->id }}">
-                                                    <i class="ri-check-fill"></i>
-                                                </a>
-                                                <a href="javascript:void(0)" class="text-[18px] mx-2 tolak"
-                                                    data-id="{{ $news->id }}" data-plan="{{ $news->plan->id }}"
-                                                    title="Tolak">
-                                                    <i class="ri-close-fill"></i>
-                                                </a>
-                                            @endif
-                                            <a href="/langganan/{{ $news->id }}" class="text-[18px] mx-2"
-                                                title="Detail">
-                                                <i class="ri-eye-2-line"></i>
-                                            </a>
-                                            <a href="javascript:void(0)"
-                                                data-url="/langganan/update-status/{{ $news->id }}"
-                                                data-status="{{ $news->status }}" class="text-[18px] mx-2 edit-status"
-                                                title="Edit Status">
-                                                <i class="ri-pencil-line"></i>
-                                            </a>
-                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

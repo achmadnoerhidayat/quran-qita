@@ -139,6 +139,7 @@ Route::middleware('auth:sanctum')->prefix('subscription')->group(function () {
     Route::get('/', [SubscriptionController::class, 'index']);
     Route::post('/', [SubscriptionController::class, 'store']);
     Route::post('/renew', [SubscriptionController::class, 'renew']);
+    Route::post('/status-payment', [SubscriptionController::class, 'cekTransaksi']);
     Route::put('/{id}', [SubscriptionController::class, 'update']);
     Route::delete('/{id}', [SubscriptionController::class, 'delete']);
 });

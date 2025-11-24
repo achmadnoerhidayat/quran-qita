@@ -284,7 +284,7 @@ class SubscriptionController extends Controller
             $duitku = new DuitkuService();
             $callback = $duitku->callback();
 
-            // Log::info('Duitku Callback', $callback);
+            Log::info('Duitku Callback Langganan', $callback);
 
             // ---- Handle Status ----
             $subs = Subscription::where('order_id', $callback['merchantOrderId'])->where('status', 'pending')->first();
@@ -328,6 +328,23 @@ class SubscriptionController extends Controller
             Log::error("Callback Error: " . $e->getMessage());
             return response($e->getMessage(), 400);
         }
+    }
+
+    public function cekTransaksi(Request $request)
+    {
+        $data = $request->validate([
+            'order_id' => ['required']
+        ]);
+
+        $purchase = Subscription::where('order_id', $data['order_id'])->where('user_id', $request->user()->id)->first();
+        if (!$purchase) {
+            return ResponseFormated::error(null, 'data Langganan tidak ditemukan', 404);
+        }
+        $duitku = new DuitkuService();
+        $status = $duitku->checkStatus($data['order_id']);
+        $response = json_decode($status, true);
+        $response['payment_url'] = $purchase->payment_url;
+        return ResponseFormated::success($response, 'data status transaksi berhasil ditampilkan');
     }
 
     private function __listPayment($methode)
