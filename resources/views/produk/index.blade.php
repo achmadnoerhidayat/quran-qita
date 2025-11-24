@@ -85,7 +85,7 @@
                             @foreach ($data as $news)
                                 <tr class="bg-white border-b border-gray-200">
                                     <td class="px-6 py-4">
-                                        {{ $news->category->id }}
+                                        {{ $news->category->title }}
                                     </td>
                                     <td class="px-6 py-4">
                                         {{ $news->title }}

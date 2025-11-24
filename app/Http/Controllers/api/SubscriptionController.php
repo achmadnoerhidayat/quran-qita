@@ -189,36 +189,60 @@ class SubscriptionController extends Controller
     {
         $data = $request->validate([
             "plan_id" => ['required', 'numeric'],
-            "bukti_transfer" => ['required', 'image', 'mimes:png,jpg,jpeg'],
+            "payment_method" => ['required', 'string', 'max:2'],
         ]);
 
         $user = $request->user();
-        $url = null;
         try {
+            $duitku = new DuitkuService();
             DB::beginTransaction();
             $sub = Subscription::where('user_id', $user->id)->first();
             if (!$sub) {
                 return ResponseFormated::error(null, 'data Subscription tidak ditemukan', 404);
             }
-            $url = $sub->bukti_transfer;
-            if ($request->hasFile('bukti_transfer')) {
-                Storage::disk('public')->delete($url);
-                $photo = $request->file('bukti_transfer');
-                $url = $photo->store('asset/subscription', 'public');
+            $plan = Plan::find($data['plan_id']);
+
+            if (!$plan) {
+                return ResponseFormated::error(null, 'data plan tidak ditemukan', 404);
             }
-            $data['user_id'] = $user->id;
-            $data['payment_status'] = 'pending';
-            $data['status'] = 'pending';
-            $data['bukti_transfer'] = $url;
-            if ($sub) {
-                $sub->update($data);
-            }
+
+            $payment = $this->__listPayment($data['payment_method']);
+
+            $orderId = 'QQS-' . Str::ulid();
+
+            $params = [
+                'paymentAmount'   => $plan->price,
+                'paymentMethod'   => $data['payment_method'],
+                'merchantOrderId' => $orderId,
+                'productDetails'  => $plan->name,
+                'email'           => $request->user()->email,
+                'phoneNumber'     => '',
+                'customerVaName'  => $request->user()->name,
+                'expiryPeriod'    => 10,
+                'callbackUrl'     => url('/api/subscription/callback'),
+                'returnUrl'       => url('/paid-success'),
+            ];
+
+            $response = $duitku->createInvoice($params);
+            $result = json_decode($response, true);
+            $sub->update([
+                'user_id' => $request->user()->id,
+                'plan_id' => $data['plan_id'],
+                'order_id' => $orderId,
+                'payment_reference' => $result['reference'],
+                'va_number' => isset($result['vaNumber']) ? $result['vaNumber'] : null,
+                'qr_string' => isset($result['qrString']) ? $result['qrString'] : null,
+                'payment_url' => isset($result['paymentUrl']) ? $result['paymentUrl'] : null,
+                'payment_method' => $data['payment_method'],
+                'payment_type' => $payment['payment_type'],
+                'information' => $payment['information'],
+                'price' => $plan->price,
+                'status' => 'pending'
+            ]);
             DB::commit();
-            return ResponseFormated::success(null, 'data subscription berhasil diupgrade');
+            $result['order_id'] = $orderId;
+            return ResponseFormated::success($result, 'data subscription berhasil diupgrade');
         } catch (\Exception $e) {
-            if ($url !== null) {
-                Storage::disk('public')->delete($url);
-            }
             DB::rollBack();
             return ResponseFormated::error(null, $e->getMessage(), 403);
         }
@@ -270,11 +294,14 @@ class SubscriptionController extends Controller
             if ($callback['resultCode'] == "00") {
                 $end = null;
                 $start = null;
+                $note = null;
                 if ($subs->end_at !== null) {
                     $end = $subs->end_at->isPast() ? Carbon::now()->addDays($subs->plan->duration) : $subs->end_at->addDays($subs->plan->duration);
+                    $note = 'Perpanjang Langganan Berhasil';
                 } else {
                     $end = Carbon::now()->addDays($subs->plan->duration);
                     $start = Carbon::now();
+                    $note = 'Langganan Berhasil';
                 }
                 $subs->update([
                     'end_at' => $end,
@@ -284,7 +311,7 @@ class SubscriptionController extends Controller
                 $subs->detailSubscription()->create([
                     "user_id" => $request->user()->id,
                     "aksi" => 'Dikonfirmasi',
-                    "keterangan" => 'Langganan Berhasil'
+                    "keterangan" => $note
                 ]);
             } else {
                 $subs->update(['status' => 'failed']);
