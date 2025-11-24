@@ -16,6 +16,7 @@ use App\Http\Controllers\web\LessonController;
 use App\Http\Controllers\web\LoginController;
 use App\Http\Controllers\web\NewsHajiUmrohhController;
 use App\Http\Controllers\web\PlanController;
+use App\Http\Controllers\web\ProdukController;
 use App\Http\Controllers\web\QuizController;
 use App\Http\Controllers\web\QuranController;
 use App\Http\Controllers\web\ShareController;
@@ -188,5 +189,13 @@ Route::middleware('auth')->prefix('kategori')->group(function () {
     Route::get('/{id}', [CategoryController::class, 'edit']);
     Route::post('/', [CategoryController::class, 'store'])->name('store-kategori');
     Route::put('/{id}', [CategoryController::class, 'update'])->name('update-kategori');
-    Route::delete('/{id}', [CategoryController::class, 'delete'])->name('delete-rate');
+    Route::delete('/{id}', [CategoryController::class, 'delete'])->name('delete-kategori');
+});
+
+Route::middleware('auth')->prefix('produk')->group(function () {
+    Route::get('/', [ProdukController::class, 'index']);
+    Route::get('/{id}', [ProdukController::class, 'edit']);
+    Route::post('/', [ProdukController::class, 'store'])->name('store-produk');
+    Route::put('/{id}', [ProdukController::class, 'update'])->name('update-produk');
+    Route::delete('/{id}', [ProdukController::class, 'delete'])->name('delete-produk');
 });

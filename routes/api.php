@@ -4,6 +4,7 @@ use App\Http\Controllers\api\AiController;
 use App\Http\Controllers\api\AsmaController;
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\BookmarkController;
+use App\Http\Controllers\api\CategoryController;
 use App\Http\Controllers\api\CoinController;
 use App\Http\Controllers\api\CoinPackageController;
 use App\Http\Controllers\api\CommentController;
@@ -23,6 +24,7 @@ use App\Http\Controllers\api\LessonController;
 use App\Http\Controllers\api\MasjidController;
 use App\Http\Controllers\api\NoteController;
 use App\Http\Controllers\api\PlanController;
+use App\Http\Controllers\api\ProdukController;
 use App\Http\Controllers\api\QuizzeController;
 use App\Http\Controllers\api\RekeningBankController;
 use App\Http\Controllers\api\ReminderController;
@@ -46,8 +48,10 @@ Route::get('masjid', [MasjidController::class, 'index']);
 
 Route::get('berita-islami', [MasjidController::class, 'beritaIslami']);
 
-// callback topup koin
+// callback Duitku
 Route::post('coin/callback', [CoinController::class, 'callback']);
+
+Route::post('subscription/callback', [SubscriptionController::class, 'callback']);
 
 Route::group(['prefix' => 'auth'], function () {
     Route::post('login', [AuthController::class, 'login']);
@@ -236,6 +240,14 @@ Route::middleware('auth:sanctum')->prefix('coin')->group(function () {
     Route::post('/topup', [CoinController::class, 'topup']);
     Route::post('/status-payment', [CoinController::class, 'cekTransaksi']);
     Route::post('/payment-methode', [CoinController::class, 'paymentMethode']);
+});
+
+Route::middleware('auth:sanctum')->prefix('kategori')->group(function () {
+    Route::get('/', [CategoryController::class, 'index']);
+});
+
+Route::middleware('auth:sanctum')->prefix('produk')->group(function () {
+    Route::get('/', [ProdukController::class, 'index']);
 });
 
 Route::middleware('auth:sanctum')->prefix('chat-ai')->group(function () {

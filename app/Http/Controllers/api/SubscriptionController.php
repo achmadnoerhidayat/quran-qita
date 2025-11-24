@@ -4,11 +4,15 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\ResponseFormated;
+use App\Models\Plan;
 use App\Models\Subscription;
+use App\Services\DuitkuService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class SubscriptionController extends Controller
 {
@@ -74,34 +78,54 @@ class SubscriptionController extends Controller
     {
         $data = $request->validate([
             "plan_id" => ['required', 'numeric'],
-            "bukti_transfer" => ['required', 'image', 'mimes:png,jpg,jpeg'],
+            "payment_method" => ['required', 'string', 'max:2'],
         ]);
-        $user = $request->user();
-        $url = null;
         try {
+            $duitku = new DuitkuService();
             DB::beginTransaction();
-            if ($request->hasFile('bukti_transfer')) {
-                $photo = $request->file('bukti_transfer');
-                $url = $photo->store('asset/subscription', 'public');
+            $plan = Plan::find($data['plan_id']);
+
+            if (!$plan) {
+                return ResponseFormated::error(null, 'data plan tidak ditemukan', 404);
             }
-            $data['user_id'] = $user->id;
-            $data['payment_status'] = 'pending';
-            $data['status'] = 'pending';
-            $data['bukti_transfer'] = $url;
-            $sub = Subscription::where('user_id', $user->id)->first();
-            if ($sub) {
-                $data['starts_at'] = null;
-                $data['end_at'] = null;
-                $sub->update($data);
-            } else {
-                Subscription::create($data);
-            }
+
+            $payment = $this->__listPayment($data['payment_method']);
+
+            $orderId = 'QQS-' . Str::ulid();
+
+            $params = [
+                'paymentAmount'   => $plan->price,
+                'paymentMethod'   => $data['payment_method'],
+                'merchantOrderId' => $orderId,
+                'productDetails'  => $plan->name,
+                'email'           => $request->user()->email,
+                'phoneNumber'     => '',
+                'customerVaName'  => $request->user()->name,
+                'expiryPeriod'    => 10,
+                'callbackUrl'     => url('/api/subscription/callback'),
+                'returnUrl'       => url('/paid-success'),
+            ];
+
+            $response = $duitku->createInvoice($params);
+            $result = json_decode($response, true);
+
+            Subscription::create([
+                'user_id' => $request->user()->id,
+                'plan_id' => $data['plan_id'],
+                'order_id' => $orderId,
+                'payment_reference' => $result['reference'],
+                'va_number' => isset($result['vaNumber']) ? $result['vaNumber'] : null,
+                'qr_string' => isset($result['qrString']) ? $result['qrString'] : null,
+                'payment_url' => isset($result['paymentUrl']) ? $result['paymentUrl'] : null,
+                'payment_method' => $data['payment_method'],
+                'payment_type' => $payment['payment_type'],
+                'information' => $payment['information'],
+                'price' => $plan->price,
+            ]);
+            $result['order_id'] = $orderId;
             DB::commit();
-            return ResponseFormated::success(null, 'data subscription berhasil ditambahkan');
+            return ResponseFormated::success($result, 'data subscription berhasil ditambahkan');
         } catch (\Exception $e) {
-            if ($url !== null) {
-                Storage::disk('public')->delete($url);
-            }
             DB::rollBack();
             return ResponseFormated::error(null, $e->getMessage(), 403);
         }
@@ -227,5 +251,184 @@ class SubscriptionController extends Controller
             DB::rollBack();
             return ResponseFormated::error(null, $e->getMessage(), 403);
         }
+    }
+
+    public function callback(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $duitku = new DuitkuService();
+            $callback = $duitku->callback();
+
+            // Log::info('Duitku Callback', $callback);
+
+            // ---- Handle Status ----
+            $subs = Subscription::where('order_id', $callback['merchantOrderId'])->where('status', 'pending')->first();
+            if (!$subs) {
+                return ResponseFormated::error(null, 'Langganan tidak ditemukan', 404);
+            }
+            if ($callback['resultCode'] == "00") {
+                $end = null;
+                $start = null;
+                if ($subs->end_at !== null) {
+                    $end = $subs->end_at->isPast() ? Carbon::now()->addDays($subs->plan->duration) : $subs->end_at->addDays($subs->plan->duration);
+                } else {
+                    $end = Carbon::now()->addDays($subs->plan->duration);
+                    $start = Carbon::now();
+                }
+                $subs->update([
+                    'end_at' => $end,
+                    'starts_at' => $start,
+                    'status' => 'success'
+                ]);
+                $subs->detailSubscription()->create([
+                    "user_id" => $request->user()->id,
+                    "aksi" => 'Dikonfirmasi',
+                    "keterangan" => 'Langganan Berhasil'
+                ]);
+            } else {
+                $subs->update(['status' => 'failed']);
+                $subs->detailSubscription()->create([
+                    "user_id" => $request->user()->id,
+                    "aksi" => 'Ditolak',
+                    "keterangan" => 'Langganan Gagal'
+                ]);
+            }
+            DB::commit();
+            return ResponseFormated::success(null, 'ok');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Callback Error: " . $e->getMessage());
+            return response($e->getMessage(), 400);
+        }
+    }
+
+    private function __listPayment($methode)
+    {
+        $result = [];
+        switch ($methode) {
+            case 'VC':
+                $result['payment_type'] = 'Credit Card';
+                $result['information'] = '(Visa / Master Card / JCB)';
+                break;
+            case 'BC':
+                $result['payment_type'] = 'Virtual Account';
+                $result['information'] = 'BCA Virtual Account';
+                break;
+            case 'M2':
+                $result['payment_type'] = 'Virtual Account';
+                $result['information'] = 'Mandiri Virtual Account';
+                break;
+            case 'VA':
+                $result['payment_type'] = 'Virtual Account';
+                $result['information'] = 'Maybank Virtual Account';
+                break;
+            case 'I1':
+                $result['payment_type'] = 'Virtual Account';
+                $result['information'] = 'BNI Virtual Account';
+                break;
+            case 'B1':
+                $result['payment_type'] = 'Virtual Account';
+                $result['information'] = 'CIMB Niaga Virtual Account';
+                break;
+            case 'BT':
+                $result['payment_type'] = 'Virtual Account';
+                $result['information'] = 'Permata Bank Virtual Account';
+                break;
+            case 'A1':
+                $result['payment_type'] = 'Virtual Account';
+                $result['information'] = 'ATM Bersama';
+                break;
+            case 'AG':
+                $result['payment_type'] = 'Virtual Account';
+                $result['information'] = 'Bank Artha Graha';
+                break;
+            case 'NC':
+                $result['payment_type'] = 'Virtual Account';
+                $result['information'] = 'Bank Neo Commerce/BNC';
+                break;
+            case 'BR':
+                $result['payment_type'] = 'Virtual Account';
+                $result['information'] = 'BRIVA';
+                break;
+            case 'S1':
+                $result['payment_type'] = 'Virtual Account';
+                $result['information'] = 'Bank Sahabat Sampoerna';
+                break;
+            case 'DM':
+                $result['payment_type'] = 'Virtual Account';
+                $result['information'] = 'Danamon Virtual Account';
+                break;
+            case 'BV':
+                $result['payment_type'] = 'Virtual Account';
+                $result['information'] = 'BSI Virtual Account';
+                break;
+            case 'FT':
+                $result['payment_type'] = 'Ritel';
+                $result['information'] = 'Pegadaian/ALFA/Pos';
+                break;
+            case 'IR':
+                $result['payment_type'] = 'Ritel';
+                $result['information'] = 'Indomaret';
+                break;
+            case 'OV':
+                $result['payment_type'] = 'E-Wallet';
+                $result['information'] = 'OVO (Support Void)';
+                break;
+            case 'SA':
+                $result['payment_type'] = 'E-Wallet';
+                $result['information'] = 'Shopee Pay Apps (Support Void)';
+                break;
+            case 'LF':
+                $result['payment_type'] = 'E-Wallet';
+                $result['information'] = 'LinkAja Apps (Fixed Fee)';
+                break;
+            case 'LA':
+                $result['payment_type'] = 'E-Wallet';
+                $result['information'] = 'LinkAja Apps (Percentage Fee)';
+                break;
+            case 'DA':
+                $result['payment_type'] = 'E-Wallet';
+                $result['information'] = 'DANA';
+                break;
+            case 'SL':
+                $result['payment_type'] = 'E-Wallet';
+                $result['information'] = 'Shopee Pay Account Link';
+                break;
+            case 'OL':
+                $result['payment_type'] = 'E-Wallet';
+                $result['information'] = 'OVO Account Link';
+                break;
+            case 'SP':
+                $result['payment_type'] = 'QRIS';
+                $result['information'] = 'Shopee Pay';
+                break;
+            case 'NQ':
+                $result['payment_type'] = 'QRIS';
+                $result['information'] = 'Nobu';
+                break;
+            case 'GQ':
+                $result['payment_type'] = 'QRIS';
+                $result['information'] = 'Gudang Voucher';
+                break;
+            case 'SQ':
+                $result['payment_type'] = 'QRIS';
+                $result['information'] = 'Nusapay';
+                break;
+            case 'DN':
+                $result['payment_type'] = 'Kredit';
+                $result['information'] = 'Indodana Paylater';
+                break;
+            case 'AT':
+                $result['payment_type'] = 'Kredit';
+                $result['information'] = 'ATOME';
+                break;
+
+            default:
+                $result['payment_type'] = 'E-Banking';
+                $result['information'] = 'Jenius Pay';
+                break;
+        }
+        return $result;
     }
 }

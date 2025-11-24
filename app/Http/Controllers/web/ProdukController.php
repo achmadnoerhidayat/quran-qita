@@ -4,12 +4,13 @@ namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-class CategoryController extends Controller
+class ProdukController extends Controller
 {
     public function index(Request $request)
     {
@@ -22,40 +23,14 @@ class CategoryController extends Controller
         if (!in_array($user->role, ['admin', 'super-admin'])) {
             return redirect()->intended('/logout');
         }
-        $data = Category::orderBy('created_at', $order)->paginate($limit);
-        return view('kategori.index', [
+        $data = Product::with('category')->orderBy('created_at', $order)->paginate($limit);
+        $kategori = Category::all();
+        return view('produk.index', [
             'data' => $data,
+            'kategori' => $kategori,
             'title' => 'Dashboard Produk',
             'class' => 'text-white bg-gray-700'
         ]);
-    }
-
-    public function store(Request $request)
-    {
-        $data = $request->validate([
-            'title' => ['required', 'min:5', 'max:20'],
-            'icon' => ['nullable', 'image', 'mimes:png,jpg,jpeg,JPG,PNG,JPEG']
-        ]);
-        $url = null;
-        try {
-            DB::beginTransaction();
-            if ($request->hasFile('icon')) {
-                $photo = $request->file('icon');
-                $url = $photo->store('asset/kategori', 'public');
-                $data['icon'] = $url;
-            }
-            Category::create($data);
-            DB::commit();
-            return redirect()->intended('/kategori');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            if (!empty($url)) {
-                Storage::disk('public')->delete($url);
-            }
-            return back()->withErrors([
-                'error' => $e->getMessage(),
-            ]);
-        }
     }
 
     public function edit($id)
@@ -67,46 +42,38 @@ class CategoryController extends Controller
         if (!in_array($user->role, ['admin', 'super-admin'])) {
             return redirect()->intended('/logout');
         }
-        $kategori = Category::find($id);
-        if (!$kategori) {
-            return back()->withErrors([
-                'error' => 'Kategori Tidak Ditemukan',
-            ]);
-        }
-        return view('kategori.edit', [
-            'data' => $kategori,
+        $data = Product::find($id);
+        $kategori = Category::all();
+        return view('produk.edit', [
+            'data' => $data,
+            'kategori' => $kategori,
             'title' => 'Dashboard Produk',
             'class' => 'text-white bg-gray-700'
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function store(Request $request)
     {
         $data = $request->validate([
+            'category_id' => ['required', 'numeric'],
             'title' => ['required', 'min:5', 'max:25'],
-            'icon' => ['nullable', 'image', 'mimes:png,jpg,jpeg,JPG,PNG,JPEG']
+            'price' => ['required', 'numeric'],
+            'duration' => ['required', 'numeric'],
+            'icon' => ['required', 'image', 'mimes:png,jpg,jpeg,JPG,PNG,JPEG'],
+            'deskripsi' => ['required']
         ]);
+
         $url = null;
         try {
             DB::beginTransaction();
-            $kategori = Category::find($id);
-            if (!$kategori) {
-                return back()->withErrors([
-                    'error' => 'Kategori Tidak Ditemukan',
-                ]);
-            }
             if ($request->hasFile('icon')) {
-                $url = $kategori->icon;
-                if (!empty($url)) {
-                    Storage::disk('public')->delete($url);
-                }
                 $photo = $request->file('icon');
-                $url = $photo->store('asset/kategori', 'public');
+                $url = $photo->store('asset/produk', 'public');
                 $data['icon'] = $url;
             }
-            $kategori->update($data);
+            Product::create($data);
             DB::commit();
-            return redirect()->intended('/kategori');
+            return redirect()->intended('/produk');
         } catch (\Exception $e) {
             DB::rollBack();
             if (!empty($url)) {
@@ -118,30 +85,78 @@ class CategoryController extends Controller
         }
     }
 
+    public function update(Request $request, $id)
+    {
+        $data = $request->validate([
+            'category_id' => ['required', 'numeric'],
+            'title' => ['required', 'min:5', 'max:25'],
+            'price' => ['required', 'numeric'],
+            'duration' => ['required', 'numeric'],
+            'icon' => ['nullable', 'image', 'mimes:png,jpg,jpeg,JPG,PNG,JPEG'],
+            'deskripsi' => ['required', 'min:5']
+        ]);
+
+        $url = null;
+
+        try {
+            DB::beginTransaction();
+            $produk = Product::find($id);
+            if (!$produk) {
+                return back()->withErrors([
+                    'error' => 'Data Produk Tidak Ditemukan',
+                ]);
+            }
+            if ($request->hasFile('icon')) {
+                $url = $produk->icon;
+                if (!empty($url)) {
+                    Storage::disk('public')->delete($url);
+                }
+                $photo = $request->file('icon');
+                $url = $photo->store('asset/produk', 'public');
+                $data['icon'] = $url;
+            }
+            $produk->update($data);
+            DB::commit();
+            return redirect()->intended('/produk');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            if (!empty($url)) {
+                Storage::disk('public')->delete($url);
+            }
+            dd($e->getMessage());
+            return back()->withErrors([
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
     public function delete($id)
     {
         $url = null;
         try {
             DB::beginTransaction();
-            $kategori = Category::find($id);
-            if (!$kategori) {
+            $produk = Product::find($id);
+            if (!$produk) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Kategori Tidak Ditemukan'
+                    'message' => 'Data Produk Tidak Ditemukan'
                 ]);
             }
-            $url = $kategori->icon;
+            $url = $produk->icon;
             if (!empty($url)) {
                 Storage::disk('public')->delete($url);
             }
-            $kategori->delete();
+            $produk->delete();
             DB::commit();
             return response()->json([
                 'success' => true,
-                'message' => 'data Kategori berhasil dihapus.'
+                'message' => 'data produk berhasil dihapus.'
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
+            if (!empty($url)) {
+                Storage::disk('public')->delete($url);
+            }
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()

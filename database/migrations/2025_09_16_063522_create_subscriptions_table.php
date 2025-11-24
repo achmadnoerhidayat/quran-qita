@@ -13,14 +13,24 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable();
-            $table->foreignId('plan_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->nullOnDelete();
+
+            $table->unsignedBigInteger('plan_id')->nullable();
+            $table->foreign('plan_id')->references('id')->on('plans')->nullOnDelete();
+
             $table->timestamp('starts_at')->nullable();
             $table->timestamp('end_at')->nullable();
-            $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');
-            $table->enum('status', ['pending', 'active', 'expired', 'cancelled'])->default('pending');
-            $table->string('bukti_transfer')->nullable();
-            $table->longText('keterangan_admin')->nullable();
+            $table->string('order_id')->nullable();
+            $table->string('payment_url')->nullable();
+            $table->string('payment_method')->nullable();
+            $table->string('payment_reference')->nullable();
+            $table->string('payment_type')->nullable();
+            $table->string('information')->nullable();
+            $table->bigInteger('price')->default(0);
+            $table->string('va_number')->nullable();
+            $table->string('qr_string')->nullable();
+            $table->enum('status', ['pending', 'success', 'failed'])->default('pending');
             $table->timestamps();
         });
     }

@@ -32,7 +32,7 @@
                         </svg>
                     </button>
 
-                    <h2 class="text-xl font-bold text-gray-800 ml-4 hidden sm:block">Dashboard Kategori</h2>
+                    <h2 class="text-xl font-bold text-gray-800 ml-4 hidden sm:block">Dashboard Produk</h2>
                 </div>
 
                 <div class="flex items-center space-x-4">
@@ -52,7 +52,7 @@
                     </p>
                     <button type="button" onclick="showModal()"
                         class="w-1/4 border border-gray-300 text-black bg-white from-purple-600 to-blue-500 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 cursor-pointe">
-                        Tambah Kategori
+                        Tambah Produk
                     </button>
                 </div>
 
@@ -62,10 +62,19 @@
                         <thead class="text-xs text-gray-700 uppercase bg-gray-100">
                             <tr>
                                 <th scope="col" class="px-6 py-3">
+                                    Kategori
+                                </th>
+                                <th scope="col" class="px-6 py-3">
                                     Title
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Icon
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Harga
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Durasi
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Aksi
@@ -75,6 +84,9 @@
                         <tbody>
                             @foreach ($data as $news)
                                 <tr class="bg-white border-b border-gray-200">
+                                    <td class="px-6 py-4">
+                                        {{ $news->category->id }}
+                                    </td>
                                     <td class="px-6 py-4">
                                         {{ $news->title }}
                                     </td>
@@ -87,9 +99,15 @@
                                             </div>
                                         @endif
                                     </td>
+                                    <td>
+                                        {{ $news->price }} Coin
+                                    </td>
+                                    <td>
+                                        {{ $news->duration }} Hari
+                                    </td>
                                     <td class="px-6 py-4">
                                         <div class="flex justify-content-center">
-                                            <a href="/kategori/{{ $news->id }}" class="text-[18px] mx-2">
+                                            <a href="/produk/{{ $news->id }}" class="text-[18px] mx-2">
                                                 <i class="ri-edit-fill"></i>
                                             </a>
                                             <a href="javascript:void(0)" class="text-[18px] mx-2 delete-materi"
@@ -111,10 +129,24 @@
         </div>
 
         <x-modal>
-            <h2 class="text-lg font-bold mb-4 text-red-600">Tambah Kategori</h2>
+            <h2 class="text-lg font-bold mb-4 text-red-600">Tambah Produk</h2>
             <form class="space-y-4 md:space-y-6 mt-3" method="POST" enctype="multipart/form-data"
-                action="{{ route('store-kategori') }}">
+                action="{{ route('store-produk') }}">
                 @csrf
+                <div>
+                    <label for="role"
+                        class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Kategori</label>
+                    <select name="category_id" id="course_id"
+                        class="bg-gray-50 border @error('category_id') border-red-500 @else border-gray-300 focus:border-primary-600 dark:border-gray-600 dark:focus:border-blue-500 @enderror text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-white-100 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500">
+                        <option value="">Pilih Kategori</option>
+                        @foreach ($kategori as $kursus)
+                            <option value="{{ $kursus->id }}">{{ $kursus->title }}</option>
+                        @endforeach
+                    </select>
+                    @error('category_id')
+                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
                 <div>
                     <label for="body"
                         class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Title</label>
@@ -126,11 +158,41 @@
                     @enderror
                 </div>
                 <div>
-                    <label for="icon" class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Upload Icon
-                        (Optional)</label>
+                    <label for="body" class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Harga /
+                        Koin</label>
+                    <input type="text" name="price" id="price"
+                        class="bg-gray-50 border @error('price') border-red-500 @else border-gray-300 focus:border-primary-600 dark:border-gray-600 dark:focus:border-blue-500 @enderror text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-white-100 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500"
+                        value="{{ old('price') }}" placeholder="Masukan Harga..." />
+                    @error('price')
+                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label for="body" class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Durasi /
+                        Hari (Optional)</label>
+                    <input type="text" name="duration" id="duration"
+                        class="bg-gray-50 border @error('duration') border-red-500 @else border-gray-300 focus:border-primary-600 dark:border-gray-600 dark:focus:border-blue-500 @enderror text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-white-100 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500"
+                        value="{{ old('duration') }}" placeholder="Masukan Harga..." />
+                    @error('duration')
+                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label for="icon" class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Upload
+                        Icon</label>
                     <input type="file" name="icon" id="title"
                         class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                     @error('icon')
+                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label for="body"
+                        class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Deskripsi</label>
+                    <textarea name="deskripsi" id="editor" cols="30" rows="10"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-white-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    {{ old('deskripsi') }}</textarea>
+                    @error('deskripsi')
                         <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
@@ -153,10 +215,11 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
             $(document).on('click', '.delete-materi', function() {
                 const id = $(this).data('id');
                 Swal.fire({
-                    title: 'Yakin hapus Kategori?',
+                    title: 'Yakin hapus Produk?',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -166,7 +229,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: '/kategori/' + id,
+                            url: '/produk/' + id,
                             method: 'POST',
                             data: {
                                 _method: 'DELETE',
@@ -182,6 +245,7 @@
                     }
                 });
             });
+
             ClassicEditor
                 .create(document.querySelector('#editor'))
                 .catch(error => {
