@@ -309,14 +309,14 @@ class SubscriptionController extends Controller
                     'status' => 'success'
                 ]);
                 $subs->detailSubscription()->create([
-                    "user_id" => $request->user()->id,
+                    "user_id" => $subs->user_id,
                     "aksi" => 'Dikonfirmasi',
                     "keterangan" => $note
                 ]);
             } else {
                 $subs->update(['status' => 'failed']);
                 $subs->detailSubscription()->create([
-                    "user_id" => $request->user()->id,
+                    "user_id" => $subs->user_id,
                     "aksi" => 'Ditolak',
                     "keterangan" => 'Langganan Gagal'
                 ]);
