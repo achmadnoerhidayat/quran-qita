@@ -58,7 +58,7 @@ class ProdukController extends Controller
             'category_id' => ['required', 'numeric'],
             'title' => ['required', 'min:5', 'max:25'],
             'price' => ['required', 'numeric'],
-            'duration' => ['required', 'numeric'],
+            'duration' => ['nullable', 'numeric'],
             'icon' => ['required', 'image', 'mimes:png,jpg,jpeg,JPG,PNG,JPEG'],
             'deskripsi' => ['required']
         ]);
