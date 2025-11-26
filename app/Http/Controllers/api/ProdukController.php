@@ -24,7 +24,7 @@ class ProdukController extends Controller
                 return ResponseFormated::error(null, 'data produk tidak ditemukan', 404);
             }
             $status_pembelian = false;
-            $trans = TransactionProduct::where('product_id', $produk->id)->first();
+            $trans = TransactionProduct::where('product_id', $produk->id)->where('user_id', $request->user()->id)->first();
             if ($trans) {
                 $status_pembelian = true;
             }
@@ -42,7 +42,7 @@ class ProdukController extends Controller
         $produk = $produk->orderBy('title', 'asc')->paginate($limit);
         foreach ($produk as $key => $value) {
             $status_pembelian = false;
-            $trans = TransactionProduct::where('product_id', $value->id)->first();
+            $trans = TransactionProduct::where('product_id', $value->id)->where('user_id', $request->user()->id)->first();
             if ($trans) {
                 $status_pembelian = true;
             }
