@@ -32,6 +32,7 @@ use App\Http\Controllers\api\ScheduleController;
 use App\Http\Controllers\api\SubscriptionController;
 use App\Http\Controllers\api\SurahController;
 use App\Http\Controllers\api\TanyaUstadController;
+use App\Http\Controllers\api\TransaksiProdukController;
 use App\Http\Controllers\api\TypeDzikirController;
 use App\Http\Controllers\api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -249,6 +250,11 @@ Route::middleware('auth:sanctum')->prefix('kategori')->group(function () {
 
 Route::middleware('auth:sanctum')->prefix('produk')->group(function () {
     Route::get('/', [ProdukController::class, 'index']);
+    Route::prefix('transaksi')->group(function () {
+        Route::get('/', [TransaksiProdukController::class, 'index']);
+        Route::post('/', [TransaksiProdukController::class, 'store']);
+        Route::post('/refund', [TransaksiProdukController::class, 'refund']);
+    });
 });
 
 Route::middleware('auth:sanctum')->prefix('chat-ai')->group(function () {

@@ -80,4 +80,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Follow::class, 'follower_id');
     }
+
+    public function wallet()
+    {
+        return $this->hasOne(UserWallet::class, 'user_id');
+    }
 }

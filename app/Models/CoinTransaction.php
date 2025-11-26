@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CoinTransaction extends Model
 {
-    protected $fillable = ['user_id', 'purchase_id', 'amount_coin', 'start_balance', 'end_balance'];
+    protected $fillable = ['user_id', 'purchase_id', 'amount_coin', 'start_balance', 'end_balance', 'type'];
 
     protected $hidden = ['user_id', 'purchase_id'];
 

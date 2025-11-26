@@ -30,7 +30,7 @@ class CheckExpiredSubscriptions extends Command
         $this->info('Memulai pemeriksaan langganan yang kedaluwarsa...');
 
         // Cari semua langganan aktif yang tanggal berakhirnya sudah di masa lalu
-        $expiredSubscriptions = Subscription::where('status', 'active')
+        $expiredSubscriptions = Subscription::where('status', 'success')
             ->where('end_at', '<', Carbon::now())
             ->get();
 

@@ -184,7 +184,8 @@ class CoinController extends Controller
                         'amount_coin' => $coin->amount_coin,
                     ]);
                 } else {
-                    $amount = (int) $coin->amount_coin + (int) $wallet->coins;
+                    $startBalance = $wallet->coins;
+                    $amount = (int) $coin->amount_coin + $startBalance;
                     $wallet->update([
                         'coins' => $amount,
                     ]);
@@ -193,7 +194,7 @@ class CoinController extends Controller
                         'user_id' => $coin->user_id,
                         'type' => 'topup',
                         'purchase_id' => $coin->id,
-                        'start_balance' => $wallet->coins,
+                        'start_balance' => $startBalance,
                         'end_balance' => $amount,
                         'amount_coin' => $coin->amount_coin,
                     ]);
