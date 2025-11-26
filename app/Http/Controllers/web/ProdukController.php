@@ -71,6 +71,9 @@ class ProdukController extends Controller
                 $url = $photo->store('asset/produk', 'public');
                 $data['icon'] = $url;
             }
+            if (empty($data['duration'])) {
+                $data['duration'] = 0;
+            }
             Product::create($data);
             DB::commit();
             return redirect()->intended('/produk');
