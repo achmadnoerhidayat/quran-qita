@@ -19,7 +19,7 @@ class TransaksiProdukController extends Controller
         $id = $request->input('id');
         $limit = $request->input('limit', 25);
         $user = $request->user();
-        $trans = TransactionProduct::with('detail', 'user.wallet');
+        $trans = TransactionProduct::with('detail', 'user.wallet', 'produk.category');
         if (!in_array($user->role, ['admin', 'super-admin'])) {
             if ($id) {
                 $trans = $trans->where('id', $id)->where('user_id', $user->id)->first();

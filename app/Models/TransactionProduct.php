@@ -16,6 +16,11 @@ class TransactionProduct extends Model
         "exp_refund" => "datetime",
     ];
 
+    public function produk()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
+
     public function detail()
     {
         return $this->hasMany(TransactionProductDetail::class, 'transaction_id');
