@@ -60,7 +60,7 @@ class TransaksiProdukController extends Controller
             if ($endBalance  < 0) {
                 return ResponseFormated::error(null, 'saldo anda tidak mencukupi segera isi ulang koin anda', 400);
             }
-            $existTrans = TransactionProduct::where('product_id', $data['product_id'])->first();
+            $existTrans = TransactionProduct::where('product_id', $data['product_id'])->where('user_id', $request->user()->id)->first();
 
             if ($existTrans) {
                 return ResponseFormated::error(null, 'anda sdh membeli produk ini harap pilih produk yang lain', 400);

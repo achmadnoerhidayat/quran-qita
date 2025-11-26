@@ -16,6 +16,11 @@ class TransactionProduct extends Model
         "exp_refund" => "datetime",
     ];
 
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
+
     public function produk()
     {
         return $this->belongsTo(Product::class, 'product_id');
