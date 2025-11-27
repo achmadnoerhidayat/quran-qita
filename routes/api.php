@@ -250,6 +250,7 @@ Route::middleware('auth:sanctum')->prefix('kategori')->group(function () {
 
 Route::middleware('auth:sanctum')->prefix('produk')->group(function () {
     Route::get('/', [ProdukController::class, 'index']);
+    Route::post('/use', [ProdukController::class, 'useProduk']);
     Route::prefix('transaksi')->group(function () {
         Route::get('/', [TransaksiProdukController::class, 'index']);
         Route::post('/', [TransaksiProdukController::class, 'store']);

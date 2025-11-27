@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TransactionProduct extends Model
 {
-    protected $fillable = ['user_id', 'product_id', 'starts_at', 'end_at', 'amount_coin', 'exp_refund', 'status'];
+    protected $fillable = ['user_id', 'product_id', 'starts_at', 'end_at', 'amount_coin', 'exp_refund', 'status', 'is_active'];
 
     protected $hidden = ['user_id', 'product_id'];
 
@@ -14,6 +14,7 @@ class TransactionProduct extends Model
         "starts_at" => "datetime",
         "end_at" => "datetime",
         "exp_refund" => "datetime",
+        "is_active" => "boolean",
     ];
 
     protected function serializeDate(\DateTimeInterface $date)
