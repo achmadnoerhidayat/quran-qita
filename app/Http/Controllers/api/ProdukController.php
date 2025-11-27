@@ -43,11 +43,14 @@ class ProdukController extends Controller
         foreach ($produk as $key => $value) {
             $status_pembelian = false;
             $is_active = false;
+            $pembelian = null;
             $trans = TransactionProduct::where('product_id', $value->id)->where('user_id', $request->user()->id)->where('status', 'success')->first();
             if ($trans) {
                 $is_active = $trans->is_active;
                 $status_pembelian = true;
+                $pembelian = $trans;
             }
+            $value['transaksi'] = $pembelian;
             $value['is_active'] = $is_active;
             $value['status_pembelian'] = $status_pembelian;
         }
