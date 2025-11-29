@@ -153,18 +153,16 @@ class TransaksiProdukController extends Controller
             }
 
             $startBalance = $wallet->coins;
-            $endBalance = $startBalance + $produk->price;
+            $endBalance = $startBalance + $trans->amount_coin;
 
             $trans->update([
-                'user_id' => $wallet->user_id,
-                'amount_coin' => $produk->price,
                 'status' => 'refund'
             ]);
 
             $trans->detail()->create([
                 'user_id' => $wallet->user_id,
                 'aksi' => 'Dikonfirmasi',
-                'keterangan' => 'Pengembalian Dana Koin ' . $produk->price
+                'keterangan' => 'Pengembalian Dana Koin ' . $trans->amount_coin
             ]);
 
             $wallet->update(['coins' => $endBalance]);
