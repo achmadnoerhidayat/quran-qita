@@ -136,20 +136,36 @@ class TransaksiProdukController extends Controller
         ]);
         try {
             DB::beginTransaction();
-            $wallet = UserWallet::where('user_id', $request->user()->id)->first();
-            if (!$wallet) {
-                return ResponseFormated::error(null, 'data user wallet tidak ditemukan', 404);
-            }
 
-            $trans = TransactionProduct::where('id', $data['transaction_id'])->where('exp_refund', '>', Carbon::now())->first();
+            $trans = TransactionProduct::where('id', $data['transaction_id'])->where('user_id', $request->user()->id)->where('exp_refund', '>', Carbon::now())->first();
 
             if (!$trans) {
                 return ResponseFormated::error(null, 'Transaksi tidak tersedia atau waktu pengajuan refund sudah habis.', 404);
             }
 
+            // produk free
+            if ($trans->amount_coin < 1) {
+                $trans->update([
+                    'status' => 'refund'
+                ]);
+
+                $trans->detail()->create([
+                    'user_id' => $trans->user_id,
+                    'aksi' => 'Dikonfirmasi',
+                    'keterangan' => 'Pengembalian Dana Koin ' . $trans->amount_coin
+                ]);
+                DB::commit();
+                return ResponseFormated::success(null, 'refund pembelian produk berhasil ditambahkan');
+            }
+
             $produk = Product::find($trans->product_id);
             if (!$produk) {
                 return ResponseFormated::error(null, 'data produk tidak ditemukan', 404);
+            }
+
+            $wallet = UserWallet::where('user_id', $request->user()->id)->first();
+            if (!$wallet) {
+                return ResponseFormated::error(null, 'data user wallet tidak ditemukan', 404);
             }
 
             $startBalance = $wallet->coins;
