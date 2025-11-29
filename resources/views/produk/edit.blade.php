@@ -78,21 +78,68 @@
                         @enderror
                     </div>
                     <div>
-                        <label for="body" class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Harga /
-                            Koin</label>
+                        <div class="flex justify-between mb-2">
+                            <label for="body"
+                                class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Harga /
+                                Koin</label>
+                            <div class="flex justify-between mr-2">
+
+                                <label class="relative inline-flex cursor-pointer items-center mr-2">
+
+                                    <input id="switch" type="checkbox" class="peer sr-only free"
+                                        @checked($data->price == 0) />
+
+                                    <div
+                                        class="h-6 w-11 rounded-full border bg-slate-200
+                after:absolute after:left-[2px] after:top-0.6 after:h-5 after:w-5 after:rounded-full
+                after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
+                peer-checked:bg-slate-800
+                peer-checked:after:translate-x-[11px]
+                peer-checked:after:border-white">
+                                    </div>
+                                </label>
+                                <label for="switch" class="block mb-2 text-sm font-medium text-black-100 dark:text-black">
+                                    Free
+                                </label>
+                            </div>
+                        </div>
                         <input type="text" name="price" id="price"
-                            class="bg-gray-50 border @error('price') border-red-500 @else border-gray-300 focus:border-primary-600 dark:border-gray-600 dark:focus:border-blue-500 @enderror text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-white-100 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500"
+                            class="bg-gray-50 border @error('price') border-red-500 @else border-gray-300 focus:border-primary-600 dark:border-gray-600 dark:focus:border-blue-500 @enderror text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-white-100 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500 @if ($data->price == 0) hidden @endif"
                             value="{{ $data->price }}" placeholder="Masukan Harga..." />
                         @error('price')
                             <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                     <div>
-                        <label for="body" class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Durasi /
-                            Hari (Optional)</label>
+                        <div class="flex justify-between mb-2">
+                            <label for="body"
+                                class="block mb-2 text-sm font-medium text-black-100 dark:text-black">Durasi
+                                /
+                                Hari (Optional)</label>
+                            <div class="flex justify-between mr-2">
+
+                                <label class="relative inline-flex cursor-pointer items-center mr-2">
+
+                                    <input id="switch" type="checkbox" class="peer sr-only permanen"
+                                        @checked($data->duration == 0) />
+
+                                    <div
+                                        class="h-6 w-11 rounded-full border bg-slate-200
+                after:absolute after:left-[2px] after:top-0.6 after:h-5 after:w-5 after:rounded-full
+                after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
+                peer-checked:bg-slate-800
+                peer-checked:after:translate-x-[11px]
+                peer-checked:after:border-white">
+                                    </div>
+                                </label>
+                                <label for="switch" class="block mb-2 text-sm font-medium text-black-100 dark:text-black">
+                                    Permanen
+                                </label>
+                            </div>
+                        </div>
                         <input type="text" name="duration" id="duration"
-                            class="bg-gray-50 border @error('duration') border-red-500 @else border-gray-300 focus:border-primary-600 dark:border-gray-600 dark:focus:border-blue-500 @enderror text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-white-100 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500"
-                            value="{{ $data->duration }}" placeholder="Masukan Harga..." />
+                            class="bg-gray-50 border @error('duration') border-red-500 @else border-gray-300 focus:border-primary-600 dark:border-gray-600 dark:focus:border-blue-500 @enderror text-gray-900 rounded-lg focus:ring-primary-600 block w-full p-2.5 dark:bg-white-100 dark:placeholder-gray-400 dark:text-gray dark:focus:ring-blue-500 @if ($data->duration == 0) hidden @endif"
+                            value="{{ $data->duration }}" placeholder="Masukan Hari..." />
                         @error('duration')
                             <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                         @enderror
@@ -160,6 +207,28 @@
             </script>
         @endif
         <script>
+            $(document).on("change", ".free", function() {
+                var checked = $(this).is(":checked");
+                if (checked) {
+                    $("#price").addClass('hidden');
+                    $("#price").val("0");
+                } else {
+                    $("#price").removeClass('hidden');
+                    $("#price").val("");
+                }
+            });
+
+            $(document).on("change", ".permanen", function() {
+                var checked = $(this).is(":checked");
+                if (checked) {
+                    $("#duration").addClass('hidden');
+                    $("#duration").val("0");
+                } else {
+                    $("#duration").removeClass('hidden');
+                    $("#duration").val("");
+                }
+            });
+
             ClassicEditor
                 .create(document.querySelector('#editor'))
                 .catch(error => {
