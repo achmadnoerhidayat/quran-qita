@@ -60,7 +60,8 @@ class ProdukController extends Controller
             'price' => ['required', 'numeric'],
             'duration' => ['nullable', 'numeric'],
             'icon' => ['required', 'image', 'mimes:png,jpg,jpeg,JPG,PNG,JPEG'],
-            'deskripsi' => ['required']
+            'deskripsi' => ['required'],
+            'is_premium' => ['required', 'numeric'],
         ]);
 
         $url = null;
@@ -96,7 +97,8 @@ class ProdukController extends Controller
             'price' => ['required', 'numeric'],
             'duration' => ['required', 'numeric'],
             'icon' => ['nullable', 'image', 'mimes:png,jpg,jpeg,JPG,PNG,JPEG'],
-            'deskripsi' => ['required', 'min:5']
+            'deskripsi' => ['required', 'min:5'],
+            'is_premium' => ['nullable', 'numeric'],
         ]);
 
         $url = null;

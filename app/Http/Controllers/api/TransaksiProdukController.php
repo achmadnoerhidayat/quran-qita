@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\ResponseFormated;
 use App\Models\CoinTransaction;
 use App\Models\Product;
+use App\Models\Subscription;
 use App\Models\TransactionProduct;
 use App\Models\UserWallet;
 use Carbon\Carbon;
@@ -51,10 +52,19 @@ class TransaksiProdukController extends Controller
             if (!$wallet) {
                 return ResponseFormated::error(null, 'data user wallet tidak ditemukan', 404);
             }
+
             $produk = Product::find($data['product_id']);
             if (!$produk) {
                 return ResponseFormated::error(null, 'data produk tidak ditemukan', 404);
             }
+
+            if ($produk->is_premium > 0) {
+                $subs = Subscription::where('user_id', $request->user()->id)->where('status', 'success')->first();
+                if (!$subs) {
+                    return ResponseFormated::success(null, 'tidak bisa membeli produk ini, Khusus Pengguna Premium', 400);
+                }
+            }
+
             $startBalance = $wallet->coins;
             $endBalance = $startBalance - $produk->price;
             if ($endBalance  < 0) {

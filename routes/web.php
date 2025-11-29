@@ -20,6 +20,8 @@ use App\Http\Controllers\web\ProdukController;
 use App\Http\Controllers\web\QuizController;
 use App\Http\Controllers\web\QuranController;
 use App\Http\Controllers\web\ShareController;
+use App\Http\Controllers\web\TransaksiCoinController;
+use App\Http\Controllers\web\TransaksiProdukController;
 use App\Http\Controllers\web\TypeDzikirController;
 use App\Http\Controllers\web\UserController;
 use Illuminate\Support\Facades\Route;
@@ -182,6 +184,14 @@ Route::middleware('auth')->prefix('rate')->group(function () {
     Route::post('/', [CoinRateController::class, 'store'])->name('store-rate');
     Route::put('/{id}', [CoinRateController::class, 'update'])->name('update-rate');
     Route::delete('/{id}', [CoinRateController::class, 'delete'])->name('delete-rate');
+});
+
+Route::middleware('auth')->prefix('transaksi-coin')->group(function () {
+    Route::get('/', [TransaksiCoinController::class, 'index']);
+});
+
+Route::middleware('auth')->prefix('transaksi-produk')->group(function () {
+    Route::get('/', [TransaksiProdukController::class, 'index']);
 });
 
 Route::middleware('auth')->prefix('kategori')->group(function () {

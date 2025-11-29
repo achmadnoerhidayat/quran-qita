@@ -196,6 +196,28 @@
                         <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
+                <div class="flex justify-between mr-2">
+                    <label for="switch" class="block mb-2 text-sm font-medium text-black-100 dark:text-black">
+                        Premium
+                    </label>
+
+                    <label class="relative inline-flex cursor-pointer items-center">
+                        <!-- hidden supaya unchecked tetap kirim 0 -->
+                        <input type="hidden" name="is_premium" value="0">
+
+                        <input id="switch" name="is_premium" type="checkbox" value="1" class="peer sr-only" />
+
+                        <div
+                            class="h-6 w-11 rounded-full border bg-slate-200
+                after:absolute after:left-[2px] after:top-0.6 after:h-5 after:w-5 after:rounded-full
+                after:border after:border-gray-300 after:bg-white after:transition-all after:content-['']
+                peer-checked:bg-slate-800
+                peer-checked:after:translate-x-[11px]
+                peer-checked:after:border-white">
+                        </div>
+                    </label>
+                </div>
+
                 <button type="submit"
                     class="w-full border border-gray-300 text-black bg-white from-purple-600 to-blue-500 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mb-2 cursor-pointe">
                     Simpan

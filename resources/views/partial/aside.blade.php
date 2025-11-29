@@ -217,6 +217,8 @@
                 <a href="/rate"
                     class="block py-2 pl-12 text-gray-400 hover:bg-gray-800 hover:text-white transition duration-200 rounded-lg">Nilai
                     Tukar</a>
+                <a href="/transaksi-coin"
+                    class="block py-2 pl-12 text-gray-400 hover:bg-gray-800 hover:text-white transition duration-200 rounded-lg">Transaksi</a>
             </div>
         </div>
 
@@ -248,6 +250,8 @@
                     class="block py-2 pl-12 text-gray-400 hover:bg-gray-800 hover:text-white transition duration-200 rounded-lg">Kategori</a>
                 <a href="/produk"
                     class="block py-2 pl-12 text-gray-400 hover:bg-gray-800 hover:text-white transition duration-200 rounded-lg">Produk</a>
+                <a href="/transaksi-produk"
+                    class="block py-2 pl-12 text-gray-400 hover:bg-gray-800 hover:text-white transition duration-200 rounded-lg">Transaksi</a>
             </div>
         </div>
 
