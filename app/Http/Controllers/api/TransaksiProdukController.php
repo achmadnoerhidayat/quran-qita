@@ -48,10 +48,6 @@ class TransaksiProdukController extends Controller
         ]);
         try {
             DB::beginTransaction();
-            $wallet = UserWallet::where('user_id', $request->user()->id)->first();
-            if (!$wallet) {
-                return ResponseFormated::error(null, 'data user wallet tidak ditemukan', 404);
-            }
 
             $produk = Product::find($data['product_id']);
             if (!$produk) {
@@ -65,15 +61,34 @@ class TransaksiProdukController extends Controller
                 }
             }
 
-            $startBalance = $wallet->coins;
-            $endBalance = $startBalance - $produk->price;
-            if ($endBalance  < 0) {
-                return ResponseFormated::error(null, 'saldo anda tidak mencukupi segera isi ulang koin anda', 400);
-            }
             $existTrans = TransactionProduct::where('product_id', $data['product_id'])->where('user_id', $request->user()->id)->where('status', 'success')->first();
 
             if ($existTrans) {
                 return ResponseFormated::error(null, 'anda sdh membeli produk ini harap pilih produk yang lain', 400);
+            }
+
+            // beli produk free
+            if ($produk->price < 1) {
+                $this->__buyFreeProduk([
+                    'user_id' => $request->user()->id,
+                    'price' => $produk->price,
+                    'duration' => $produk->duration,
+                    'product_id' => $data['product_id'],
+                    'title' => $produk->title,
+                ]);
+                DB::commit();
+                return ResponseFormated::success(null, 'pembelian produk berhasil ditambahkan');
+            }
+
+            $wallet = UserWallet::where('user_id', $request->user()->id)->first();
+            if (!$wallet) {
+                return ResponseFormated::error(null, 'data user wallet tidak ditemukan', 404);
+            }
+
+            $startBalance = $wallet->coins;
+            $endBalance = $startBalance - $produk->price;
+            if ($endBalance  < 0) {
+                return ResponseFormated::error(null, 'saldo anda tidak mencukupi segera isi ulang koin anda', 400);
             }
 
             $deleteTrans = TransactionProduct::with('detail')->where('product_id', $data['product_id'])->where('user_id', $request->user()->id)->first();
@@ -166,5 +181,31 @@ class TransaksiProdukController extends Controller
             DB::rollBack();
             return ResponseFormated::error(null, $e->getMessage(), 400);
         }
+    }
+
+    private function __buyFreeProduk($data)
+    {
+        $deleteTrans = TransactionProduct::with('detail')->where('product_id', $data['product_id'])->where('user_id', $data['user_id'])->first();
+        if ($deleteTrans) {
+            $deleteTrans->detail()->delete();
+            $deleteTrans->delete();
+        }
+        $trans = TransactionProduct::create([
+            'user_id' => $data['user_id'],
+            'amount_coin' => $data['price'],
+            'starts_at' => Carbon::now(),
+            'end_at' => ($data['duration'] > 0) ? Carbon::now()->addDays($data['duration']) : null,
+            'exp_refund' => Carbon::now()->addMinutes(10),
+            'product_id' => $data['product_id'],
+            'status' => 'success'
+        ]);
+
+        $trans->detail()->create([
+            'user_id' => $data['user_id'],
+            'aksi' => 'Dikonfirmasi',
+            'keterangan' => 'Pembelian ' . $data['title']
+        ]);
+
+        return $trans;
     }
 }

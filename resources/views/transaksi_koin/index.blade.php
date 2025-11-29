@@ -156,7 +156,7 @@
                                                                     stroke-width="0" fill="currentColor"></path>
                                                             </g>
                                                         </svg>
-                                                        $trans->status
+                                                        {{ $trans->status }}
                                                     </div>
                                                 @endif
                                             </td>
