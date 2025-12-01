@@ -16,6 +16,7 @@ use App\Http\Controllers\api\DonasiController;
 use App\Http\Controllers\api\DzikirController;
 use App\Http\Controllers\api\FollowController;
 use App\Http\Controllers\api\ForumController;
+use App\Http\Controllers\api\GiftController;
 use App\Http\Controllers\api\HajiUmrohController;
 use App\Http\Controllers\api\HighlightController;
 use App\Http\Controllers\api\JadwalSholatController;
@@ -256,6 +257,10 @@ Route::middleware('auth:sanctum')->prefix('produk')->group(function () {
         Route::post('/', [TransaksiProdukController::class, 'store']);
         Route::post('/refund', [TransaksiProdukController::class, 'refund']);
     });
+});
+
+Route::middleware('auth:sanctum')->prefix('gift')->group(function () {
+    Route::get('/', [GiftController::class, 'index']);
 });
 
 Route::middleware('auth:sanctum')->prefix('chat-ai')->group(function () {

@@ -11,6 +11,7 @@ use App\Http\Controllers\web\CourseController;
 use App\Http\Controllers\web\DashController;
 use App\Http\Controllers\web\DonasiController;
 use App\Http\Controllers\web\DzikirController;
+use App\Http\Controllers\web\GiftController;
 use App\Http\Controllers\web\LanggananController;
 use App\Http\Controllers\web\LessonController;
 use App\Http\Controllers\web\LoginController;
@@ -208,4 +209,12 @@ Route::middleware('auth')->prefix('produk')->group(function () {
     Route::post('/', [ProdukController::class, 'store'])->name('store-produk');
     Route::put('/{id}', [ProdukController::class, 'update'])->name('update-produk');
     Route::delete('/{id}', [ProdukController::class, 'delete'])->name('delete-produk');
+});
+
+Route::middleware('auth')->prefix('gift')->group(function () {
+    Route::get('/', [GiftController::class, 'index']);
+    Route::get('/{id}', [GiftController::class, 'edit']);
+    Route::post('/', [GiftController::class, 'store'])->name('store-gift');
+    Route::put('/{id}', [GiftController::class, 'update'])->name('update-gift');
+    Route::delete('/{id}', [GiftController::class, 'delete']);
 });
