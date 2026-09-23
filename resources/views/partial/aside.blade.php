@@ -14,7 +14,7 @@
 
     <nav class="mt-8 space-y-2 p-4 h-[80vh] overflow-y-scroll [scrollbar-width:none] [-ms-overflow-style:none]">
 
-        <a href="/" @class([
+        <a href="/dashboard" @class([
             'flex items-center p-3 rounded-lg hover:bg-gray-800 hover:text-white font-medium transition duration-200 group relative',
             $class => $title === 'Dashboard Quranqita',
         ])>

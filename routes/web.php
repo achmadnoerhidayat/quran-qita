@@ -22,10 +22,13 @@ use App\Http\Controllers\web\QuizController;
 use App\Http\Controllers\web\QuranController;
 use App\Http\Controllers\web\ShareController;
 use App\Http\Controllers\web\TransaksiCoinController;
+use App\Http\Controllers\web\LandingController;
 use App\Http\Controllers\web\TransaksiProdukController;
 use App\Http\Controllers\web\TypeDzikirController;
 use App\Http\Controllers\web\UserController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/', [LandingController::class, 'index'])->name('landing');
 
 Route::get('/terms', function () {
     return view('terms');
@@ -51,7 +54,7 @@ Route::group(['prefix' => '/'], function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/', [DashController::class, 'index']);
+    Route::get('/dashboard', [DashController::class, 'index'])->name('dashboard');
     // Route::post('/', [LoginController::class, 'login'])->name('login');
 });
 

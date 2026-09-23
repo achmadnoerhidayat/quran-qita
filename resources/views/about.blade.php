@@ -107,7 +107,7 @@
                     <ul>
                         <li>Website: <a href="https://quranqita.pro" target="__blank">https://quranqita.pro</a></li>
                         <li>Email: <a href="mailto:support@quranqita.pro">support@quranqita.pro</a></li>
-                        <li>Alamat : Jln. Sarimadu 15, Bandung</li>
+                        <li>Alamat : Jl. Hasanudin No.81, Krajan I, Kembiritan, Kec. Genteng, Kabupaten Banyuwangi, Jawa Timur 68465</li>
                         <li>Phone: 08561098098</li>
                         <li>Media Sosial: (akan ditambahkan sesuai channel resmi)</li>
                     </ul>
